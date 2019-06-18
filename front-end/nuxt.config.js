@@ -14,7 +14,13 @@ export default {
         content: process.env.npm_package_description || ''
       }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href: 'https://use.fontawesome.com/releases/v5.2.0/css/all.css'
+      }
+    ]
   },
   /*
    ** Customize the progress-bar color
@@ -33,7 +39,7 @@ export default {
    */
   modules: [
     // Doc: https://buefy.github.io/#/documentation
-    'nuxt-buefy',
+    ['nuxt-buefy', { materialDesignIcons: false, defaultIconPack: 'fas' }],
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
@@ -58,4 +64,4 @@ export default {
      */
     extend(config, ctx) {}
   }
-}
+};
