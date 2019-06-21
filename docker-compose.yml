@@ -22,6 +22,8 @@ services:
       - '8080:8080'
     depends_on:
       - db
+    environment:
+      - DEVISE_JWT_SECRET_KEY=b"LyVC.N)#^MV??9qFXdWG=kC'?{/I
 volumes:
   pgdata:
     external: true
