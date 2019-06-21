@@ -57,6 +57,27 @@
             >
             </b-timepicker>
           </b-field>
+          <h5 class="title is-5">Other Activities</h5>
+          <b-field
+            v-for="(activity, activityIndex) in dayPlan.activities"
+            :key="'activity-' + index + '-' + activityIndex"
+          >
+            <b-input
+              v-model="activity.name"
+              icon="walking"
+              placeholder="Enter activity"
+              @blur="addNewActivity(dayPlan)"
+              expanded
+            ></b-input>
+            <b-timepicker
+              v-model="activity.time"
+              icon="clock"
+              editable
+              placeholder="Type or select"
+              hour-format="12"
+              :increment-minutes="5"
+            ></b-timepicker>
+          </b-field>
           <hr />
         </div>
       </div>
@@ -465,7 +486,8 @@ export default {
               .map(() => {
                 return { attraction: null, time: null };
               }),
-            meals: [{ name: null, time: null }]
+            meals: [{ name: null, time: null }],
+            activities: [{ name: null, time: null }]
           };
         });
 
@@ -477,6 +499,13 @@ export default {
       if (!lastMeal.name) return;
 
       dayPlan.meals.push({ name: null, time: null });
+    },
+    addNewActivity(dayPlan) {
+      const lastActivity = dayPlan.activities[dayPlan.activities.length - 1];
+
+      if (!lastActivity.name) return;
+
+      dayPlan.activities.push({ name: null, time: null });
     },
     filteredRestaurantArray: function(meal) {
       if (meal.name == null) return;
