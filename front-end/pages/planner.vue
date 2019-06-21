@@ -24,7 +24,7 @@
           >
           </b-autocomplete>
         </b-field>
-        <h3 v-if="dayPlans.length" class="title is-3">
+        <h3 v-show="dayPlans.length" class="title is-3">
           Itinerary
         </h3>
         <div v-for="(dayPlan, index) in dayPlans" :key="'day-plan-' + index">
@@ -32,41 +32,8 @@
             <b-icon icon="calendar" size="is-small"></b-icon>
             Day {{ index + 1 }}
             <div class="subtitle is-inline">{{ getDateForDay(index + 1) }}</div>
-            <span class="tag" v-if="dayPlan.park">{{ dayPlan.park }}</span>
           </h4>
-          <h5 class="title is-5">FastPass</h5>
-          <b-field>
-            <b-select
-              v-model="dayPlan.park"
-              placeholder="Select a theme park"
-              icon="map-pin"
-              required
-            >
-              <option value="Magic Kingdom">Magic Kingdom</option>
-              <option value="Epcot">Epcot</option>
-              <option value="Hollywood Studios">Hollywood Studios</option>
-              <option value="Animal Kingdom">Animal Kingdom</option>
-            </b-select>
-          </b-field>
-          <b-field
-            v-for="(fastPass, fastPassIndex) in dayPlan.fastPasses"
-            :key="'fp-key-' + index + '-' + fastPassIndex"
-          >
-            <b-input
-              v-model="fastPass.attraction"
-              :placeholder="fastPassSlots[fastPassIndex] + ' FastPass'"
-              class="is-expanded"
-              icon="ticket-alt"
-            ></b-input>
-            <b-timepicker
-              v-model="fastPass.time"
-              placeholder="Type or select, 24 hour clock"
-              icon="clock"
-              editable
-              class="is-narrow"
-            >
-            </b-timepicker>
-          </b-field>
+          <FastPasses></FastPasses>
           <h5 class="title is-5">Dining</h5>
           <b-field
             v-for="(meal, mealIndex) in dayPlan.meals"
@@ -75,17 +42,18 @@
             <b-autocomplete
               v-model="meal.name"
               placeholder="Search restaurants..."
-              class="is-expanded"
               icon="utensils"
               :data="filteredRestaurantArray(meal)"
               @blur="addNewMeal(dayPlan)"
+              expanded
             ></b-autocomplete>
             <b-timepicker
               v-model="meal.time"
               icon="clock"
               editable
-              class="is-narrow"
-              placeholder="Type or select, 24 hour clock"
+              placeholder="Type or select"
+              hour-format="12"
+              :increment-minutes="5"
             >
             </b-timepicker>
           </b-field>
@@ -99,6 +67,7 @@
 <script>
 import HotelDatePicker from 'vue-hotel-datepicker';
 import { addDays, format, differenceInDays } from 'date-fns';
+import FastPasses from '~/components/FastPasses.vue';
 
 const hotels = [
   'All-Star Movies',
@@ -443,7 +412,8 @@ const restaurants = [
 
 export default {
   components: {
-    HotelDatePicker
+    HotelDatePicker,
+    FastPasses
   },
   data() {
     return {
