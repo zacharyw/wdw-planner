@@ -66,7 +66,6 @@ export default {
           }
         })
         .catch(e => {
-          window.console.log(e);
           this.error = e + '';
         });
     },
