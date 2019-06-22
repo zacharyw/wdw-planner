@@ -43,8 +43,26 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/auth'
   ],
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/users/sign_in',
+            method: 'post'
+          },
+          logout: { url: '/users/sign_out' },
+          user: { url: '/users/current', method: 'get' }
+        }
+      }
+    }
+  },
+  router: {
+    middleware: ['auth']
+  },
   watchers: {
     webpack: {
       poll: true
@@ -54,7 +72,10 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: 'http://rails:8080/',
+    browserBaseURL: 'http://localhost:8080/'
+  },
   /*
    ** Build configuration
    */

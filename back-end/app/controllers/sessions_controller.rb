@@ -4,9 +4,6 @@ class SessionsController < Devise::SessionsController
   end
 
   def show
-    if user_signed_in?
-      render json: current_user
-    end
   end
 
   private

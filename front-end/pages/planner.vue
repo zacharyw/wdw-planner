@@ -44,8 +44,8 @@
               placeholder="Search restaurants..."
               icon="utensils"
               :data="filteredRestaurantArray(meal)"
-              @blur="addNewMeal(dayPlan)"
               expanded
+              @blur="addNewMeal(dayPlan)"
             ></b-autocomplete>
             <b-timepicker
               v-model="meal.time"
@@ -66,8 +66,8 @@
               v-model="activity.name"
               icon="walking"
               placeholder="Enter activity"
-              @blur="addNewActivity(dayPlan)"
               expanded
+              @blur="addNewActivity(dayPlan)"
             ></b-input>
             <b-timepicker
               v-model="activity.time"
