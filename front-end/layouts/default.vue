@@ -50,15 +50,20 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a class="button is-primary">
-                <strong>Sign up</strong>
-              </a>
-              <a class="button is-light">
-                Log in
-              </a>
-            </div>
+          <div v-if="!this.$auth.loggedIn" class="navbar-item">
+            <b-dropdown position="is-bottom-left" aria-role="menu">
+              <button slot="trigger" class="button is-primary">
+                <span>Login</span>
+                <b-icon icon="caret-down"></b-icon>
+              </button>
+
+              <b-dropdown-item aria-role="menu-item" custom paddingless>
+                <LoginCard></LoginCard>
+              </b-dropdown-item>
+            </b-dropdown>
+          </div>
+          <div v-else class="navbar-item">
+            <LogoutButton></LogoutButton>
           </div>
         </div>
       </div>
@@ -66,3 +71,15 @@
     <nuxt />
   </div>
 </template>
+
+<script>
+import LoginCard from '~/components/LoginCard.vue';
+import LogoutButton from '~/components/LogoutButton.vue';
+
+export default {
+  components: {
+    LoginCard,
+    LogoutButton
+  }
+};
+</script>
