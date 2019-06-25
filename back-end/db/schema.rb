@@ -10,10 +10,57 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_21_211245) do
+ActiveRecord::Schema.define(version: 2019_06_25_125256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "activities", force: :cascade do |t|
+    t.bigint "day_id"
+    t.string "name"
+    t.datetime "time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["day_id"], name: "index_activities_on_day_id"
+  end
+
+  create_table "days", force: :cascade do |t|
+    t.bigint "itinerary_id"
+    t.string "park"
+    t.date "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["itinerary_id"], name: "index_days_on_itinerary_id"
+  end
+
+  create_table "fast_passes", force: :cascade do |t|
+    t.bigint "day_id"
+    t.string "attraction"
+    t.datetime "time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["day_id"], name: "index_fast_passes_on_day_id"
+  end
+
+  create_table "itineraries", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "hotel"
+    t.date "check_in"
+    t.date "check_out"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_itineraries_on_user_id"
+  end
+
+  create_table "meals", force: :cascade do |t|
+    t.bigint "day_id"
+    t.string "restaurant"
+    t.datetime "time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["day_id"], name: "index_meals_on_day_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -38,5 +85,10 @@ ActiveRecord::Schema.define(version: 2019_06_21_211245) do
     t.index ["user_id"], name: "index_whitelisted_jwts_on_user_id"
   end
 
+  add_foreign_key "activities", "days"
+  add_foreign_key "days", "itineraries"
+  add_foreign_key "fast_passes", "days"
+  add_foreign_key "itineraries", "users"
+  add_foreign_key "meals", "days"
   add_foreign_key "whitelisted_jwts", "users", on_delete: :cascade
 end
