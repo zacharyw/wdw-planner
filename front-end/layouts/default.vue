@@ -74,7 +74,7 @@
 
 <script>
 import LoginCard from '~/components/Authentication/LoginCard.vue';
-import LogoutButton from '~/components/LogoutButton.vue';
+import LogoutButton from '~/components/Authentication/LogoutButton.vue';
 
 export default {
   components: {

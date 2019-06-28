@@ -39,7 +39,7 @@ describe('LoginCard', () => {
       error = false;
     });
 
-    it('Logs in user via form', async done => {
+    it('Logs in user via form', async () => {
       const wrapper = mount(LoginCard, {
         mocks: { $auth: mockAuth }
       });
@@ -49,12 +49,12 @@ describe('LoginCard', () => {
       expect(inputs.length).toEqual(2);
 
       wrapper.find('input[type="email"]').setValue(email);
-      wrapper.find('input[type="password"]').setValue(password);
+      await flushPromises();
 
-      wrapper.vm.$nextTick(done);
+      wrapper.find('input[type="password"]').setValue(password);
+      await flushPromises();
 
       wrapper.find('form').trigger('submit.prevent');
-
       await flushPromises();
 
       expect(strategy).toBe('local');
