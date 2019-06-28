@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import LoginCard from '~/components/LoginCard.vue';
+import LoginCard from '~/components/Authentication/LoginCard.vue';
 import LogoutButton from '~/components/LogoutButton.vue';
 
 export default {
