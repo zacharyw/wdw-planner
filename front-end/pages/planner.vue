@@ -88,7 +88,7 @@
 <script>
 import HotelDatePicker from 'vue-hotel-datepicker';
 import { addDays, format, differenceInDays } from 'date-fns';
-import FastPasses from '~/components/FastPasses.vue';
+import FastPasses from '~/components/FastPass/FastPasses.vue';
 
 const hotels = [
   'All-Star Movies',

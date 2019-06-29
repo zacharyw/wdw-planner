@@ -3,6 +3,7 @@
     <h5 class="title is-5">FastPass</h5>
     <b-field :message="parkMessage">
       <b-select
+        ref="park-selector"
         v-model="park"
         placeholder="Select a theme park"
         icon="map-pin"
@@ -20,6 +21,7 @@
       :key="'fp-key-' + fastPassIndex"
     >
       <b-select
+        ref="fast-pass-selector"
         v-model="fastPass.attraction"
         icon="ticket-alt"
         placeholder="Select FastPass"
