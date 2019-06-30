@@ -41,7 +41,7 @@ describe('FastPasses', () => {
       await flushPromises();
     });
 
-    it('Creates three empty fastpass selectors', () => {
+    it('Creates three empty fastpass selectors with same options', () => {
       const fastPassSelectors = wrapper.findAll({ ref: 'fast-pass-selector' });
 
       expect(fastPassSelectors.length).toEqual(3);

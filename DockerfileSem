@@ -1,0 +1,17 @@
+FROM ubuntu:latest
+
+ARG semaphorekey
+
+RUN apt-get update && apt-get install -y curl sudo
+
+RUN adduser --disabled-password --gecos '' docker
+RUN adduser docker sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER docker
+
+RUN curl https://storage.googleapis.com/sem-cli-releases/get.sh | bash
+
+RUN sem connect zacharyw.semaphoreci.com "$semaphorekey"
+
+ENTRYPOINT ["sem"]
