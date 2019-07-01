@@ -24,12 +24,6 @@ services:
       - db
     environment:
       - DEVISE_JWT_SECRET_KEY=b"LyVC.N)#^MV??9qFXdWG=kC'?{/I
-  sem:
-    build:
-      context: .
-      dockerfile: DockerfileSem
-      args:
-        - semaphorekey
 volumes:
   pgdata:
     external: true
