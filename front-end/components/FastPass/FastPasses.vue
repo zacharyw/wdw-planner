@@ -45,7 +45,7 @@
       >
       </b-timepicker>
     </b-field>
-    <p class="help is-danger content">
+    <p class="help is-danger content" style="margin-bottom: .75rem">
       {{ fastPassMessage }}
     </p>
   </div>

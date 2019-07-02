@@ -15,15 +15,7 @@
             />
           </no-ssr>
         </b-field>
-        <b-field label="Hotel" message="Where will you be staying?">
-          <b-autocomplete
-            v-model="hotel"
-            placeholder="Search hotels..."
-            :data="filteredHotelArray"
-            icon="hotel"
-          >
-          </b-autocomplete>
-        </b-field>
+        <HotelSearcher></HotelSearcher>
         <h3 v-show="dayPlans.length" class="title is-3">
           Itinerary
         </h3>
@@ -35,49 +27,9 @@
           </h4>
           <FastPasses></FastPasses>
           <h5 class="title is-5">Dining</h5>
-          <b-field
-            v-for="(meal, mealIndex) in dayPlan.meals"
-            :key="'meal-' + index + '-' + mealIndex"
-          >
-            <b-autocomplete
-              v-model="meal.name"
-              placeholder="Search restaurants..."
-              icon="utensils"
-              :data="filteredRestaurantArray(meal)"
-              expanded
-              @blur="addNewMeal(dayPlan)"
-            ></b-autocomplete>
-            <b-timepicker
-              v-model="meal.time"
-              icon="clock"
-              editable
-              placeholder="Type or select"
-              hour-format="12"
-              :increment-minutes="5"
-            >
-            </b-timepicker>
-          </b-field>
+          <Dining style="margin-bottom: 0.75rem"></Dining>
           <h5 class="title is-5">Other Activities</h5>
-          <b-field
-            v-for="(activity, activityIndex) in dayPlan.activities"
-            :key="'activity-' + index + '-' + activityIndex"
-          >
-            <b-input
-              v-model="activity.name"
-              icon="walking"
-              placeholder="Enter activity"
-              expanded
-              @blur="addNewActivity(dayPlan)"
-            ></b-input>
-            <b-timepicker
-              v-model="activity.time"
-              icon="clock"
-              editable
-              placeholder="Type or select"
-              hour-format="12"
-              :increment-minutes="5"
-            ></b-timepicker>
-          </b-field>
+          <Activities></Activities>
           <hr />
         </div>
       </div>
@@ -89,373 +41,24 @@
 import HotelDatePicker from 'vue-hotel-datepicker';
 import { addDays, format, differenceInDays } from 'date-fns';
 import FastPasses from '~/components/FastPass/FastPasses.vue';
-
-const hotels = [
-  'All-Star Movies',
-  'All-Star Music',
-  'All-Star Sports',
-  'Art of Animation',
-  'Pop Century',
-  "The Campsites at Disney's Fort Wilderness",
-  'Caribbean Beach Resort',
-  'Coronado Springs Resort',
-  'Port Orleans Resort - French Quarter',
-  'Port Orleans Resort - Riverside',
-  "The Cabins at Disney's Fort Wilderness Resort",
-  'Animal Kingdom Lodge',
-  'Beach Club',
-  'BoardWalk Inn',
-  'Contemporary',
-  'Grand Floridian Resort & Spa',
-  'Polynesian Village',
-  'Wilderness Lodge',
-  'Yacht Club',
-  'Bay Lake Tower',
-  'Boulder Ridge Villas',
-  'Copper Creek Villas & Cabins',
-  'Animal Kingdom Villas - Jambo House',
-  'Animal Kingdom Villas - Kidani Village',
-  'Beach Club Villas',
-  'BoardWalk Villas',
-  'Old Key West Resort',
-  'Polynesian Villas & Bungalows',
-  'Riviera Resort',
-  'Saratoga Springs Resort & Spa',
-  'The Villas at Grand Floridian Resort & Spa'
-];
-
-const restaurants = [
-  'KRNR The Rock Station',
-  '4 Rivers Cantina Barbacoa Food Truck',
-  '1900 Park Fare',
-  '50s Prime Time Cafe',
-  'ABC Commissary',
-  'Akershus Royal Banquet Hall',
-  'Ale and Compass Restaurant',
-  'Aloha Isle',
-  'AMC Disney Springs 24 Dine-In Theatres',
-  'Ample Hills Creamery',
-  'Anaheim Produce',
-  'Anandapur Ice Cream Truck',
-  'AristoCrepe',
-  'Storybook Dining at Artist Point',
-  "Artist's Palette",
-  "Auntie Gravity's Galactic Goodies",
-  'Avalunch',
-  "B.B. Wolf's Sausage Co.",
-  'Backlot Express',
-  'Backstretch Pool Bar',
-  'Banana Cabana Pool Bar',
-  'Barefoot Pool Bar',
-  'The Basket at Wine Bar George',
-  'Be Our Guest',
-  'Beach Club Marketplace',
-  'Beaches and Cream',
-  'Beaches Pool Bar & Grill',
-  'Belle Vue Lounge',
-  'Biergarten',
-  'Big River Grille & Brewing Works',
-  "Blaze Fast-Fire'd Pizza",
-  'Block & Hans',
-  "Todd English's bluezoo",
-  'Boardwalk Bakery',
-  "Boardwalk Joe's Marvelous Margaritas",
-  'Boardwalk Pizza Window',
-  "Boatwright's Dining Hall",
-  'Boma Flavors of Africa',
-  'Bongos Cuban Cafe',
-  'Bongos Cuban Cafe Express',
-  'Cabana Bar and Beach Club',
-  'Cafe Rix',
-  'California Grill',
-  'Cape May Cafe',
-  'Cape Town Lounge and Wine Bar',
-  "Captain Cook's Snack Company",
-  "Casey's Corner",
-  "Catalina Eddie's",
-  'Centertown Market',
-  'Centertown Market Grab & Go',
-  "Chef Art Smith's Homecomin'",
-  "Chef Mickey's",
-  'Chefs de France',
-  'Cheshire Cafe',
-  'Chicken Guy!',
-  "Cinderella's Royal Table",
-  'Citricos',
-  'Columbia Harbour House',
-  'Contempo Cafe',
-  'Contemporary Grounds',
-  'Cookes of Dublin',
-  'Cool Ship',
-  'Cooling Hut',
-  'Coral Reef',
-  "Cosmic Ray's Starlight Cafe",
-  'Courtyard Pool Bar',
-  'Cove Bar',
-  'Creature Comforts',
-  "Crew's Cup Lounge",
-  "Crockett's Tavern",
-  'House of Blues',
-  'Crystal Palace',
-  'D-Luxe Burger',
-  'Daily Poutine',
-  'Dawa Bar',
-  'Diamond Horseshoe',
-  'Dino Bite Snacks',
-  'Dockside Margaritas',
-  'Earl of Sandwich',
-  'The Edison',
-  'Eight Spoon Cafe',
-  'Electric Umbrella',
-  'El Mercado de Coronado',
-  'End Zone Food Court',
-  "Enzo's Hideaway",
-  'ESPN Club',
-  'Everything Pop Food Court',
-  'Exposition Park Food Trucks',
-  'Fairfax Fare',
-  'Fife & Drum Tavern',
-  'Flame Tree Barbecue',
-  'Flying Fish',
-  'Fountain View',
-  'Fresh Mediterranean Market',
-  'Frontera Cocina',
-  "Frostbite Freddy's Frozen Freshments",
-  'Funnel Cake Cart',
-  'Funnel Cakes',
-  'Garden Grill',
-  'Garden Grove',
-  'Gasparilla Grill',
-  "Gaston's Tavern",
-  'Gelati',
-  'Geyser Point',
-  'Ghirardelli Ice Cream & Chocolate Shop',
-  'Golden Oak Outpost',
-  "Good's Food To Go",
-  'Grand Floridian Cafe',
-  'Grandstand Spirits',
-  'Gurgling Suitcase',
-  'Haagen-Dazs at Disney Springs West Side',
-  'Happy Landings Ice Cream',
-  'Harambe Fruit Market',
-  'Harambe Marketplace',
-  'Hollywood and Vine',
-  'Hollywood Brown Derby',
-  'Hollywood Scoops',
-  'Hoop-Dee-Doo Revue',
-  "Hurricane Hanna's Grill",
-  'I.C. Expeditions',
-  'Il Mulino',
-  'Intermission Food Court',
-  'Island Markets',
-  'Isle of Java',
-  'Java Bar',
-  'Jiko - The Cooking Place',
-  "Jock Lindsey's Hangar Bar",
-  'Joy of Tea',
-  'Kabuki Cafe',
-  'Katsura Grill',
-  'Kimonos',
-  'Kona Cafe',
-  'Kringla Bakeri og Cafe',
-  'Kusafiri Coffee Shop & Bakery',
-  "L'Artisan des Glaces",
-  'La Cantina de San Angel',
-  'La Cava del Tequila',
-  'La Hacienda de San Angel',
-  'Laguna Bar',
-  'Landscape of Flavor',
-  'Lava Lounge',
-  'Le Cellier Steakhouse',
-  'Leaning Palms',
-  'Leaping Horse Libations',
-  'Les Halles Boulangerie Patisserie',
-  "Let's Go Slurpin'",
-  'Liberty Inn',
-  'Liberty Tree Tavern',
-  'Lobby Lounge',
-  'Lottawatta Lodge',
-  'Lotus Blossom Cafe',
-  "Lowtide Lou's",
-  'MacGUFFINS',
-  'Mahindi',
-  'Main Street Bakery',
-  'Maji Pool Bar',
-  "Mama Melrose's Ristorante Italiano",
-  'Mardi Grogs',
-  "Maria & Enzo's Ristorante",
-  'The Market at Ale & Compass',
-  "Martha's Vineyard",
-  'Maya Grill',
-  'Meadow Snack Bar',
-  'Dockside Diner',
-  'Mini Donuts',
-  "Mizner's Lounge",
-  'Monsieur Paul',
-  'Morimoto Asia',
-  'Morimoto Street Food',
-  'Muddy Rivers',
-  "Narcoossee's",
-  'Nine Dragons Restaurant',
-  'Nomad Lounge',
-  'Oasis Bar & Grill',
-  'Oasis Canteen',
-  'Ohana',
-  "Olivia's Cafe",
-  'On the Rocks',
-  'Outer Rim',
-  "P & J's Southern Takeout",
-  'Paddlefish',
-  'Paradiso 37',
-  "Pecos Bill's Tall Tale Inn and Cafe",
-  'Petals Pool Bar',
-  'Picabu',
-  'Pineapple Lanai',
-  'Pinocchio Village Haus',
-  'Pizzafari',
-  'Pizza Ponte',
-  'PizzeRizzo',
-  'Planet Hollywood',
-  'Plaza Ice Cream Parlor',
-  'Plaza Restaurant',
-  'Polar Pub',
-  'Polite Pig',
-  'Pongu Pongu',
-  'Popcorn in Canada',
-  "Prince Eric's Village Market",
-  'Promenade Refreshments',
-  'Raglan Road',
-  'Rainforest Cafe - Animal Kingdom',
-  'Rainforest Cafe - Downtown Disney',
-  'Refreshment Outpost',
-  'Refreshment Port',
-  'Restaurant Marrakesh',
-  'Restaurantosaurus',
-  'River Roost',
-  'Riverside Mill Food Court',
-  'Rix Sports Bar & Grill',
-  'Roaring Fork',
-  'Rose and Crown Pub and Dining',
-  "Rosie's All American Cafe",
-  'San Angel Inn Restaurante',
-  'Sanaa',
-  'Sassagoula Floatworks and Food',
-  "Satu'li Canteen",
-  "Scat Cat's Club",
-  'Sci-Fi Dine-In Theater Restaurant',
-  "Shula's Lounge",
-  "Shula's Steak House",
-  "Sebastian's Bistro",
-  'Siestas Cantina',
-  'Silver Screen Spirits Pool Bar',
-  'Singing Spirits Pool Bar',
-  'Skipper Canteen',
-  'Sleepy Hollow',
-  'Smiling Crocodile',
-  'Snack Shack',
-  'Sommerfest',
-  'Spice Road',
-  'Spirit of Aloha',
-  'Splash',
-  'Splitsville Luxury Lanes',
-  'Spyglass Grill',
-  'Starbucks at Disney Springs Marketplace',
-  'Starbucks at Disney Springs West Side',
-  'STK Orlando',
-  'Storybook Treats',
-  'Sunshine Day Bar',
-  'Sunshine Seasons',
-  'Sunshine Tree Terrace',
-  'T-Rex Cafe',
-  'Tambu Lounge',
-  'Tamu Tamu Refeshments',
-  'Tangierine Cafe',
-  'Taste Track',
-  "Tea Traders Cafe by Joffrey's",
-  'Teppan Edo',
-  'Terralina Crafted Italian',
-  'Terra Treats',
-  'Territory Lounge',
-  'Test Track Cool Wash',
-  'The Boathouse',
-  'The Chuck Wagon',
-  'The Fountain',
-  "The Friar's Nook",
-  'The Front Porch',
-  'The Lunching Pad',
-  'The Mara',
-  'The Paddock Grill',
-  'The Sand Bar',
-  'The Smokehouse',
-  'The To-Go Cart',
-  'The Trolley Car Cafe',
-  'The Turf Club Lounge',
-  'The Wave',
-  'Thirsty River Bar and Trek Snacks',
-  'Tiffins',
-  'Tokyo Dining',
-  'Tomorrowland Terrace',
-  "Tony's Town Square",
-  'Tortuga Tavern',
-  "Trader Sam's Grog Grotto",
-  "Trail's End",
-  'Trattoria al Forno',
-  'Trilo-Bites',
-  'Tune-In Lounge',
-  'Turf Club Bar and Grill',
-  'Turtle Shack',
-  'Tusker House',
-  'Tutto Gusto Wine Cellar',
-  'Tutto Italia Ristorante',
-  "Typhoon Tilly's",
-  'United Kingdom Beer Cart',
-  'Uzima Springs Pool Bar',
-  'Via Napoli',
-  'Victoria Falls Lounge',
-  "Victorias and Albert's",
-  'Vivoli il Gelato',
-  'Warming Hut',
-  'Warung Outpost',
-  'Westward Ho',
-  "Wetzel's Pretzels at Disney Springs Marketplace",
-  "Wetzel's Pretzels at Disney Springs West Side",
-  'Whispering Canyon Cafe',
-  'Wolfgang Puck Express - Marketplace',
-  'Wonderland Tea Party',
-  "Woody's Lunch Box",
-  'World Premier',
-  'Yachtsman Steakhouse',
-  'Yak and Yeti Local Foods Cafe',
-  'Yak and Yeti Restaurant',
-  'Yesake',
-  'Yorkshire County Fish Shop'
-];
+import HotelSearcher from '~/components/Itinerary/HotelSearcher.vue';
+import Dining from '~/components/Itinerary/Dining.vue';
+import Activities from '~/components/Itinerary/Activities.vue';
 
 export default {
   components: {
     HotelDatePicker,
-    FastPasses
+    FastPasses,
+    HotelSearcher,
+    Dining,
+    Activities
   },
   data() {
     return {
       checkIn: new Date(),
       checkOut: new Date(),
-      dayPlans: [],
-      hotel: '',
-      fastPassSlots: ['First', 'Second', 'Third']
+      dayPlans: []
     };
-  },
-  computed: {
-    filteredHotelArray: function() {
-      return hotels.filter(option => {
-        return (
-          option
-            .toString()
-            .toLowerCase()
-            .indexOf(this.hotel.toLowerCase()) >= 0
-        );
-      });
-    }
   },
   methods: {
     getDateForDay(day) {
@@ -480,44 +83,11 @@ export default {
         .map(() => {
           return {
             id: null,
-            park: null,
-            fastPasses: Array(3)
-              .fill()
-              .map(() => {
-                return { attraction: null, time: null };
-              }),
-            meals: [{ name: null, time: null }],
-            activities: [{ name: null, time: null }]
+            park: null
           };
         });
 
       this.dayPlans = currentPlans.concat(newPlans);
-    },
-    addNewMeal(dayPlan) {
-      const lastMeal = dayPlan.meals[dayPlan.meals.length - 1];
-
-      if (!lastMeal.name) return;
-
-      dayPlan.meals.push({ name: null, time: null });
-    },
-    addNewActivity(dayPlan) {
-      const lastActivity = dayPlan.activities[dayPlan.activities.length - 1];
-
-      if (!lastActivity.name) return;
-
-      dayPlan.activities.push({ name: null, time: null });
-    },
-    filteredRestaurantArray: function(meal) {
-      if (meal.name == null) return;
-
-      return restaurants.filter(option => {
-        return (
-          option
-            .toString()
-            .toLowerCase()
-            .indexOf(meal.name.toLowerCase()) >= 0
-        );
-      });
     }
   }
 };
