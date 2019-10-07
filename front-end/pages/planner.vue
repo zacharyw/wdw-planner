@@ -23,7 +23,9 @@
           <h4 class="title is-4">
             <b-icon icon="calendar" size="is-small"></b-icon>
             Day {{ index + 1 }}
-            <div class="subtitle is-inline">{{ getDateForDay(index + 1) }}</div>
+            <div class="subtitle is-inline">
+              {{ getDateForDay(index + 1) }} ({{ getDayOfWeek(index + 1) }})
+            </div>
           </h4>
           <FastPasses></FastPasses>
           <h5 class="title is-5">Dining</h5>
@@ -63,6 +65,9 @@ export default {
   methods: {
     getDateForDay(day) {
       return format(addDays(this.checkIn, day - 1), 'MM/DD');
+    },
+    getDayOfWeek(day) {
+      return format(addDays(this.checkIn, day - 1), 'ddd');
     },
     setCheckIn(checkIn) {
       this.checkIn = checkIn;
