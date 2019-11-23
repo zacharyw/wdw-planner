@@ -15,11 +15,13 @@ services:
       - '3000:3000'
   rails:
     build: ./back-end
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8080 -b '0.0.0.0'"
+    command: tail -f /dev/null
+    # command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8080 -b '0.0.0.0'"
     volumes:
       - './back-end:/railsapp'
     ports:
       - '8080:8080'
+      - '1234:1234'
     depends_on:
       - db
     environment:
