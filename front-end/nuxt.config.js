@@ -44,7 +44,8 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     '@nuxtjs/eslint-module',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    '@nuxtjs/proxy'
   ],
   auth: {
     strategies: {

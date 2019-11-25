@@ -21,7 +21,8 @@ services:
       - './back-end:/railsapp'
     ports:
       - '8080:8080'
-      - '1234:1234'
+      - "1234:1234"
+      - "26166:26168"
     depends_on:
       - db
     environment:

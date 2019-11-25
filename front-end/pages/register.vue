@@ -7,14 +7,14 @@
           <LogoutButton></LogoutButton>
         </div>
         <div v-else>
-          <LoginCard>
+          <LoginCard :register-form="true">
             <template #title>
-              <h1 class="title is-1">Login</h1>
+              <h1 class="title is-1">Register</h1>
             </template>
           </LoginCard>
           <p class="content has-text-centered" style="margin-top: 1rem;">
-            Don't have an account yet?
-            <nuxt-link to="/register">Register here</nuxt-link>.
+            Already have an account?
+            <nuxt-link to="/login">Log in here</nuxt-link>.
           </p>
         </div>
       </div>
@@ -27,6 +27,7 @@ import LoginCard from '~/components/Authentication/LoginCard.vue';
 import LogoutButton from '~/components/Authentication/LogoutButton.vue';
 
 export default {
+  auth: false,
   components: {
     LoginCard,
     LogoutButton
