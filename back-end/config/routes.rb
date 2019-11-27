@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'users/current', to: 'sessions#show'
+      delete 'users/sign_out', to: 'sessions#destroy'
+      post 'sign_up', to: 'registrations#create'
     end
   end
 

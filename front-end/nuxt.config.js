@@ -55,7 +55,7 @@ export default {
             url: '/users/sign_in',
             method: 'post'
           },
-          logout: { url: '/users/sign_out' },
+          logout: { url: '/users/sign_out', method: 'delete' },
           user: { url: '/users/current', method: 'get' }
         }
       }

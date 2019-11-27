@@ -7,6 +7,10 @@ class SessionsController < Devise::SessionsController
 
   def show; end
 
+  def destroy
+    super { WhitelistedJwt.find_by_jti(request.env['warden-jwt_auth.token']).destroy! }
+  end
+
   private
 
   def current_token

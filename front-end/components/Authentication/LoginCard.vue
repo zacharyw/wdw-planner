@@ -67,9 +67,11 @@ export default {
     submitForm: function() {
       if (this.registration) {
         this.$axios
-          .post('users', {
-            email: this.email,
-            password: this.password
+          .post('sign_up', {
+            user: {
+              email: this.email,
+              password: this.password
+            }
           })
           .then(response => {
             this.login();
