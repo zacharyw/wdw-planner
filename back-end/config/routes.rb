@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  post "/graphql", to: "graphql#execute"
+
   defaults format: :json do
     devise_for(
       :users,
