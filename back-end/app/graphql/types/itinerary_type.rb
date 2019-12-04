@@ -7,5 +7,11 @@ module Types
     field :name, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+
+    field :days, [Types::DayType], null: false
+
+    def days
+      AssociationLoader.for(Itinerary, :days).load(object)
+    end
   end
 end

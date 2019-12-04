@@ -12,7 +12,6 @@ module Types
       argument :id, ID, required: true
     end
 
-
     def itineraries
       Itinerary.where(user: context[:current_user])
     end
