@@ -299,5 +299,10 @@ Devise.setup do |config|
 
   config.jwt do |jwt|
     jwt.secret = ENV['DEVISE_JWT_SECRET_KEY']
+    if Rails.env.development?
+      jwt.expiration_time = 365 * 24 * 60 * 60 # one year
+    else
+      jwt.expiration_time = 2 * 24 * 60 * 60 # two days
+    end
   end
 end
