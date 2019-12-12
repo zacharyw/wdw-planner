@@ -1,5 +1,8 @@
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::Whitelist
+  include Tokenizable
+
+  attr_accessor :token
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

@@ -1,3 +1,5 @@
+import gql from 'graphql-tag';
+
 export default {
   mode: 'universal',
   /*
@@ -45,19 +47,49 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/eslint-module',
     '@nuxtjs/auth',
-    '@nuxtjs/proxy'
+    '@nuxtjs/proxy',
+    '@nuxtjs/apollo'
   ],
   auth: {
+    redirect: {
+      logout: '/login'
+    },
     strategies: {
-      local: {
-        endpoints: {
-          login: {
-            url: '/users/sign_in',
-            method: 'post'
-          },
-          logout: { url: '/users/sign_out', method: 'delete' },
-          user: { url: '/users/current', method: 'get' }
+      apollo: {
+        _scheme: '~/apollo_strategy.js',
+        mutations: {
+          login: gql`
+            mutation($email: String!, $password: String!) {
+              login(email: $email, password: $password) {
+                token
+              }
+            }
+          `,
+          logout: gql`
+            mutation {
+              logout {
+                result
+              }
+            }
+          `,
+          user: gql`
+            mutation tokenLogin {
+              tokenLogin {
+                id
+                email
+                token
+              }
+            }
+          `
         }
+      }
+    }
+  },
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://rails:8080/graphql',
+        browserHttpEndpoint: 'http://localhost:8080/graphql'
       }
     }
   },

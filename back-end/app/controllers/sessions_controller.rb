@@ -5,9 +5,7 @@ class SessionsController < Devise::SessionsController
     super { @token = current_token }
   end
 
-  def show
-    puts 'welp'
-  end
+  def show; end
 
   def destroy
     super

@@ -83,13 +83,9 @@ export default {
     },
     login: function() {
       this.$auth
-        .loginWith('local', {
-          data: {
-            user: {
-              email: this.email,
-              password: this.password
-            }
-          }
+        .loginWith('apollo', {
+          email: this.email,
+          password: this.password
         })
         .catch(e => {
           this.error = e + '';
