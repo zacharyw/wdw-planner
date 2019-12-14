@@ -1,0 +1,6 @@
+let loading = 0;
+
+export default (isLoading, countModifier, nuxtContext) => {
+  loading += countModifier;
+  console.log('Global loading', loading, countModifier);
+};
