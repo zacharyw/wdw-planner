@@ -8,8 +8,8 @@ export default class ApolloScheme {
     this.loginMutation = this.options.mutations.login;
     this.logoutMutation = this.options.mutations.logout;
     this.userMutation = this.options.mutations.user;
-    this.loginKey = this.options.loginKey;
-    this.fetchUserKey = this.options.fetchUserKey;
+    this.loginDataKey = this.options.loginDataKey;
+    this.fetchUserDataKey = this.options.fetchUserDataKey;
   }
 
   async login(variables) {
@@ -25,11 +25,11 @@ export default class ApolloScheme {
         variables: variables
       })
       .then(({ data }) => {
-        return data && data[this.loginKey];
+        return data && data[this.loginDataKey];
       });
 
     if (result == null) {
-      throw new Error('Invalid email or password.');
+      return;
     }
 
     const token = this.options.tokenType
@@ -65,7 +65,6 @@ export default class ApolloScheme {
   }
 
   async fetchUser() {
-    // Token is required but not available
     if (!this.$auth.getToken(this.name)) {
       return;
     }
@@ -77,7 +76,7 @@ export default class ApolloScheme {
 
     const result = await this.$client
       .mutate({ mutation: this.userMutation })
-      .then(({ data }) => data && data[this.fetchUserKey]);
+      .then(({ data }) => data && data[this.fetchUserDataKey]);
 
     this.$auth.setUser(result);
   }
@@ -91,6 +90,7 @@ export default class ApolloScheme {
         .catch(() => {});
     }
 
+    // Always logout locally
     return this._logoutLocally();
   }
 
@@ -105,6 +105,6 @@ const DEFAULTS = {
   tokenType: 'Bearer',
   tokenName: 'Authorization',
   mutations: {},
-  fetchUserKey: 'tokenLogin',
-  loginKey: 'login'
+  fetchUserDataKey: 'tokenLogin',
+  loginDataKey: 'login'
 };
