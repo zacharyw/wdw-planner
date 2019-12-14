@@ -3,7 +3,7 @@ export default class ApolloScheme {
     this.$auth = auth;
     this.name = options._name;
     this.options = Object.assign({}, DEFAULTS, options);
-    this.$client = auth.ctx.app.apolloProvider.defaultClient;
+    this.$client = auth.ctx.app.apolloProvider.clients[this.options.clientName];
     this.$helpers = auth.ctx.app.$apolloHelpers;
     this.loginMutation = this.options.mutations.login;
     this.logoutMutation = this.options.mutations.logout;
@@ -44,6 +44,9 @@ export default class ApolloScheme {
 
   async mounted() {
     const token = this.$auth.syncToken(this.name);
+
+    // Token should have format of "prefix token_type token", so here we split the string
+    // and get the token from the end.
     const tokenParts = token.split(' ');
     await this.$helpers.onLogin(tokenParts[tokenParts.length - 1]);
 
@@ -51,7 +54,7 @@ export default class ApolloScheme {
   }
 
   async setUserToken(tokenValue) {
-    // Ditch any leftover local tokens before attempting to log in
+    // Ensure no client side logins exist
     await this._logoutLocally();
 
     const token = this.options.tokenType
@@ -106,5 +109,6 @@ const DEFAULTS = {
   tokenName: 'Authorization',
   mutations: {},
   fetchUserDataKey: 'tokenLogin',
-  loginDataKey: 'login'
+  loginDataKey: 'login',
+  clientName: 'defaultClient'
 };
