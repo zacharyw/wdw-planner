@@ -86,9 +86,6 @@ export default {
     }
   },
   apollo: {
-    watchLoading: '~/plugins/apollo-watch-loading-handler.js',
-    // optional
-    errorHandler: '~/plugins/apollo-error-handler.js',
     clientConfigs: {
       default: {
         httpEndpoint: 'http://rails:8080/graphql',

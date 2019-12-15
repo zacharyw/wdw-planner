@@ -139,8 +139,9 @@ export default {
 
       const attractions = this.fastPasses.map(fastPass => fastPass.attraction);
 
-      const matchingAttractions = fastPassOptions[this.fastPassPark].filter(
-        attraction => attractions.includes(attraction.name)
+      const options = fastPassOptions[this.fastPassPark];
+      const matchingAttractions = options.filter(attraction =>
+        attractions.includes(attraction.name)
       );
 
       const count = matchingAttractions.reduce(

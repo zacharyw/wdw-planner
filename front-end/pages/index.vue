@@ -1,22 +1,45 @@
 <template>
-  <div>
-    <div class="section">
-      <div class="container">
-        <List />
-      </div>
+  <div class="section">
+    <div class="container">
+      <List :itinerary-data="itineraries" />
     </div>
   </div>
 </template>
 
 <script>
-import List from '~/components/Itinerary/List';
+import gql from 'graphql-tag';
+import List from '~/components/Itinerary/List.vue';
 
 export default {
   name: 'HomePage',
-  auth: true,
-
   components: {
     List
+  },
+  data() {
+    return {
+      itineraries: []
+    };
+  },
+  async asyncData(context) {
+    const { data } = await context.app.apolloProvider.defaultClient.query({
+      query: gql`
+        query {
+          itineraries {
+            id
+            name
+            hotel
+            checkIn
+            checkOut
+          }
+        }
+      `
+    });
+
+    return {
+      itineraries: data.itineraries
+    };
   }
 };
 </script>
+
+<style scoped></style>

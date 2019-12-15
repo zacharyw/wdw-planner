@@ -46,8 +46,14 @@ const hotels = [
 ];
 
 export default {
+  props: {
+    initialHotel: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
-    return { hotel: '' };
+    return { hotel: this.initialHotel };
   },
   computed: {
     filteredHotelArray: function() {

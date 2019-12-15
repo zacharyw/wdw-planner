@@ -6,16 +6,16 @@
           label="Check-In > Check-Out"
           message="How many nights will you be staying?"
         >
-          <no-ssr placeholder="Loading calendar...">
+          <client-only placeholder="Loading calendar...">
             <HotelDatePicker
               :starting-date-value="checkIn"
               :ending-date-value="checkOut"
               @check-in-changed="setCheckIn"
               @check-out-changed="setCheckOut"
             />
-          </no-ssr>
+          </client-only>
         </b-field>
-        <HotelSearcher></HotelSearcher>
+        <HotelSearcher :initial-hotel="hotel"></HotelSearcher>
         <h3 v-show="dayPlans.length" class="title is-3">
           Itinerary
         </h3>
@@ -41,11 +41,12 @@
 
 <script>
 import HotelDatePicker from 'vue-hotel-datepicker';
-import { addDays, format, differenceInDays } from 'date-fns';
+import { addDays, format, differenceInDays, parse } from 'date-fns';
 import FastPasses from '~/components/FastPass/FastPasses.vue';
 import HotelSearcher from '~/components/Itinerary/HotelSearcher.vue';
 import Dining from '~/components/Itinerary/Dining.vue';
 import Activities from '~/components/Itinerary/Activities.vue';
+import gql from 'graphql-tag';
 
 export default {
   components: {
@@ -59,7 +60,34 @@ export default {
     return {
       checkIn: new Date(),
       checkOut: new Date(),
+      hotel: '',
+      name: '',
+      id: null,
       dayPlans: []
+    };
+  },
+  async asyncData({ app, params }) {
+    const { data } = await app.apolloProvider.defaultClient.query({
+      query: gql`
+        query itinerary($id: ID!) {
+          itinerary(id: $id) {
+            id
+            name
+            hotel
+            checkIn
+            checkOut
+          }
+        }
+      `,
+      variables: {
+        id: params.id
+      }
+    });
+
+    return {
+      ...data.itinerary,
+      checkIn: parse(data.itinerary.checkIn),
+      checkOut: parse(data.itinerary.checkOut)
     };
   },
   methods: {

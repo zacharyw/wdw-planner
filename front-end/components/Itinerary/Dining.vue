@@ -1,9 +1,6 @@
 <template>
   <div>
-    <b-field
-      v-for="(meal, mealIndex) in meals"
-      :key="'meal-' + index + '-' + mealIndex"
-    >
+    <b-field v-for="(meal, mealIndex) in meals" :key="'meal-' + mealIndex">
       <b-autocomplete
         v-model="meal.name"
         placeholder="Search restaurants..."
@@ -29,7 +26,7 @@
 export default {
   name: 'Dining',
   data() {
-    return { meals: [{ name: '', time: '' }] };
+    return { meals: [{ name: '', time: new Date() }] };
   },
   methods: {
     addNewMeal() {

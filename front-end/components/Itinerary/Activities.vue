@@ -2,7 +2,7 @@
   <div>
     <b-field
       v-for="(activity, activityIndex) in activities"
-      :key="'activity-' + index + '-' + activityIndex"
+      :key="'activity-' + activityIndex"
     >
       <b-input
         v-model="activity.name"
@@ -28,7 +28,7 @@ export default {
   name: 'Activities',
   data() {
     return {
-      activities: [{ name: '', time: '' }]
+      activities: [{ name: '', time: new Date() }]
     };
   },
   methods: {
