@@ -21,6 +21,7 @@
     "@nuxtjs/pwa": "^2.6.0",
     "date-fns": "^2.0.0",
     "date-fns-tz": "^1.0.8",
+    "debounce": "^1.2.0",
     "graphql-tag": "^2.10.1",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "^0.3.2",

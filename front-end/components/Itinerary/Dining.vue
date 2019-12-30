@@ -2,7 +2,7 @@
   <div>
     <b-field v-for="(meal, mealIndex) in meals" :key="'meal-' + mealIndex">
       <b-autocomplete
-        v-model="meal.name"
+        v-model="meal.restaurant"
         placeholder="Search restaurants..."
         icon="utensils"
         :data="filteredRestaurantArray(meal)"
@@ -23,28 +23,50 @@
 </template>
 
 <script>
+const DEFAULT_MEAL = function() {
+  return [{ restaurant: '', time: null }];
+};
+
 export default {
   name: 'Dining',
+  props: {
+    value: {
+      type: Array,
+      default: () => {
+        return DEFAULT_MEAL();
+      }
+    }
+  },
   data() {
-    return { meals: [{ name: '', time: new Date() }] };
+    return {
+      meals: this.value.length === 0 ? DEFAULT_MEAL() : this.value
+    };
+  },
+  watch: {
+    meals: {
+      handler: function(oldMeals, newMeals) {
+        this.$emit('input', newMeals);
+      },
+      deep: true
+    }
   },
   methods: {
     addNewMeal() {
       const lastMeal = this.meals[this.meals.length - 1];
 
-      if (!lastMeal.name) return;
+      if (!lastMeal.restaurant) return;
 
-      this.meals.push({ name: '', time: '' });
+      this.meals.push({ restaurant: '', time: null });
     },
     filteredRestaurantArray: function(meal) {
-      if (meal.name == null) return;
+      if (meal.restaurant == null) return;
 
       return restaurants.filter(option => {
         return (
           option
             .toString()
             .toLowerCase()
-            .indexOf(meal.name.toLowerCase()) >= 0
+            .indexOf(meal.restaurant.toLowerCase()) >= 0
         );
       });
     }

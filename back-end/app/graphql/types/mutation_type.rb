@@ -2,6 +2,45 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :update_itinerary, ItineraryType, null: true do
+      description 'Fully update an itinerary'
+      argument :attributes, ItineraryInputType, required: true
+    end
+    def update_itinerary(attributes:)
+      itinerary = Itinerary.where(
+        id: attributes.id, user: context[:current_user]
+      ).first
+
+      ActiveRecord::Base.transaction do
+        Day.destroy(itinerary.days.map(&:id))
+
+        itinerary.update(
+          name: attributes.name,
+          hotel: attributes.hotel,
+          check_in: attributes.check_in,
+          check_out: attributes.check_out
+        )
+
+        attributes.days.each do |day_attrs|
+          day = itinerary.days.create!(park: day_attrs.park)
+
+          day_attrs.fast_passes.each do |fast_pass_attrs|
+            day.fast_passes.create!(fast_pass_attrs.to_h)
+          end
+
+          day_attrs.activities.each do |activity_attrs|
+            day.activities.create!(activity_attrs.to_h)
+          end
+
+          day_attrs.meals.each do |meal_attrs|
+            day.meals.create!(meal_attrs.to_h)
+          end
+        end
+      end
+
+      itinerary
+    end
+
     ## LOGIN
     field :login, UserType, null: true do
       description 'Login for users'

@@ -7,7 +7,6 @@
         v-model="park"
         placeholder="Select a theme park"
         icon="map-pin"
-        required
       >
         <option value="Magic Kingdom">Magic Kingdom</option>
         <option value="Epcot">Epcot</option>
@@ -126,11 +125,31 @@ const fastPassOptions = {
   ]
 };
 
+const DEFAULT_FAST_PASSES = function() {
+  return Array(3)
+    .fill()
+    .map(() => {
+      return { attraction: null, time: null };
+    });
+};
+
 export default {
+  props: {
+    value: {
+      type: Array,
+      default: () => {
+        return DEFAULT_FAST_PASSES();
+      }
+    },
+    initialPark: {
+      type: String,
+      default: null
+    }
+  },
   data() {
     return {
-      fastPassPark: null,
-      fastPasses: this.emptyFastPasses()
+      fastPassPark: this.initialPark,
+      fastPasses: this.initializeFastPasses(this.value)
     };
   },
   computed: {
@@ -177,6 +196,7 @@ export default {
 
         if (!this.fastPassPark || fastPassCount === 0) {
           this.fastPassPark = park;
+          this.$emit('park-change', park);
           return;
         }
 
@@ -186,9 +206,18 @@ export default {
           )
         ) {
           this.fastPassPark = park;
+          this.$emit('park-change', park);
           this.fastPasses = this.emptyFastPasses();
         }
       }
+    }
+  },
+  watch: {
+    fastPasses: {
+      handler: function(oldFastPasses, newFastPasses) {
+        this.$emit('input', newFastPasses);
+      },
+      deep: true
     }
   },
   methods: {
@@ -209,11 +238,18 @@ export default {
       return `${attraction.name} - Tier ${attraction.tier}`;
     },
     emptyFastPasses: function() {
-      return Array(3)
-        .fill()
-        .map(() => {
-          return { attraction: null, time: null };
-        });
+      return DEFAULT_FAST_PASSES();
+    },
+    initializeFastPasses: function(initialFastPasses) {
+      if (initialFastPasses.length === 3) {
+        return initialFastPasses;
+      }
+
+      while (initialFastPasses.length !== 3) {
+        initialFastPasses.push({ attraction: null, time: null });
+      }
+
+      return initialFastPasses;
     }
   }
 };

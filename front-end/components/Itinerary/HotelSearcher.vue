@@ -5,6 +5,7 @@
       placeholder="Search hotels..."
       :data="filteredHotelArray"
       icon="hotel"
+      @input="onHotelChange"
     >
     </b-autocomplete>
   </b-field>
@@ -47,13 +48,13 @@ const hotels = [
 
 export default {
   props: {
-    initialHotel: {
+    value: {
       type: String,
       default: ''
     }
   },
   data() {
-    return { hotel: this.initialHotel };
+    return { hotel: this.value };
   },
   computed: {
     filteredHotelArray: function() {
@@ -65,6 +66,11 @@ export default {
             .indexOf(this.hotel.toLowerCase()) >= 0
         );
       });
+    }
+  },
+  methods: {
+    onHotelChange: function(hotel) {
+      this.$emit('input', hotel);
     }
   }
 };

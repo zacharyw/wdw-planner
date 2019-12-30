@@ -24,12 +24,32 @@
 </template>
 
 <script>
+const DEFAULT_ACTIVITY = function() {
+  return [{ name: '', time: null }];
+};
+
 export default {
   name: 'Activities',
+  props: {
+    value: {
+      type: Array,
+      default: () => {
+        return DEFAULT_ACTIVITY();
+      }
+    }
+  },
   data() {
     return {
-      activities: [{ name: '', time: new Date() }]
+      activities: this.value.length === 0 ? DEFAULT_ACTIVITY() : this.value
     };
+  },
+  watch: {
+    activities: {
+      handler: function(oldActivities, newActivities) {
+        this.$emit('input', newActivities);
+      },
+      deep: true
+    }
   },
   methods: {
     addNewActivity() {

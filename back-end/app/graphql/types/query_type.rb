@@ -17,7 +17,7 @@ module Types
     end
 
     def itinerary(id:)
-      Itinerary.find(id)
+      Itinerary.where(id: id, user: context[:current_user]).first
     end
   end
 end
