@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import gql from 'graphql-tag';
+
 export default {
   props: {
     registerForm: Boolean
@@ -64,14 +66,24 @@ export default {
   methods: {
     submitForm: function() {
       if (this.registration) {
-        this.$axios
-          .post('sign_up', {
-            user: {
-              email: this.email,
-              password: this.password
+        const client = this.$apollo.getClient();
+
+        const mutation = gql`
+          mutation signUp($email: String!, $password: String!) {
+            signUp(email: $email, password: $password) {
+              id
             }
-          })
-          .then(response => {
+          }
+        `;
+
+        const variables = {
+          email: this.email,
+          password: this.password
+        };
+
+        client
+          .mutate({ mutation: mutation, variables: variables })
+          .then(({ data }) => {
             this.login();
           })
           .catch(e => {
