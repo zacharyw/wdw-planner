@@ -3,6 +3,14 @@
     <div class="section">
       <div class="container">
         <form @submit.prevent="saveItinerary">
+          <b-field label="Name" message="Give your trip a nickname">
+            <b-input
+              v-model="name"
+              icon="signature"
+              required
+              placeholder="Halloween 2099"
+            ></b-input>
+          </b-field>
           <b-field
             label="Check-In > Check-Out"
             message="How many nights will you be staying?"
@@ -72,8 +80,8 @@ export default {
   },
   data() {
     return {
-      checkIn: new Date(),
-      checkOut: new Date(),
+      checkIn: null,
+      checkOut: null,
       hotel: '',
       name: '',
       id: null,
@@ -90,6 +98,7 @@ export default {
             hotel
             checkIn
             checkOut
+            createdAt
             days {
               park
               fastPasses {
@@ -136,10 +145,14 @@ export default {
     });
 
     return {
-      ...data.itinerary,
+      id: data.itinerary.id,
+      name: data.itinerary.name,
+      hotel: data.itinerary.hotel,
       dayPlans: days,
-      checkIn: new Date(data.itinerary.checkIn),
-      checkOut: new Date(data.itinerary.checkOut)
+      checkIn: data.itinerary.checkIn ? new Date(data.itinerary.checkIn) : null,
+      checkOut: data.itinerary.checkOut
+        ? new Date(data.itinerary.checkOut)
+        : null
     };
   },
   mounted: function() {
@@ -192,36 +205,32 @@ export default {
         }
       `;
 
-      const days = this.dayPlans
-        .map(day => {
-          return {
-            park: day.park,
-            fastPasses: day.fastPasses
-              ? day.fastPasses
-                  .filter(fp => fp.attraction !== null || fp.time !== null)
-                  .map(fp => {
-                    return { attraction: fp.attraction, time: fp.time };
-                  })
-              : [],
-            meals: day.meals
-              ? day.meals
-                  .filter(m => m.restaurant !== null || m.time !== null)
-                  .map(m => {
-                    return { restaurant: m.restaurant, time: m.time };
-                  })
-              : [],
-            activities: day.activities
-              ? day.activities
-                  .filter(a => a.name !== null || a.time !== null)
-                  .map(a => {
-                    return { name: a.name, time: a.time };
-                  })
-              : []
-          };
-        })
-        .filter(day => {
-          return day.park !== null;
-        });
+      const days = this.dayPlans.map(day => {
+        return {
+          park: day.park,
+          fastPasses: day.fastPasses
+            ? day.fastPasses
+                .filter(fp => fp.attraction !== null || fp.time !== null)
+                .map(fp => {
+                  return { attraction: fp.attraction, time: fp.time };
+                })
+            : [],
+          meals: day.meals
+            ? day.meals
+                .filter(m => m.restaurant !== null || m.time !== null)
+                .map(m => {
+                  return { restaurant: m.restaurant, time: m.time };
+                })
+            : [],
+          activities: day.activities
+            ? day.activities
+                .filter(a => a.name !== null || a.time !== null)
+                .map(a => {
+                  return { name: a.name, time: a.time };
+                })
+            : []
+        };
+      });
 
       const variables = {
         attributes: {

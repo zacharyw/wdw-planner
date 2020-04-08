@@ -16,6 +16,7 @@
         placeholder="Type or select"
         hour-format="12"
         :increment-minutes="5"
+        @blur="meals = sortMeals(meals)"
       >
       </b-timepicker>
     </b-field>
@@ -23,6 +24,8 @@
 </template>
 
 <script>
+import sortByTime from '~/assets/js/TimeSort';
+
 const DEFAULT_MEAL = function() {
   return [{ restaurant: '', time: null }];
 };
@@ -39,7 +42,8 @@ export default {
   },
   data() {
     return {
-      meals: this.value.length === 0 ? DEFAULT_MEAL() : this.value
+      meals:
+        this.value.length === 0 ? DEFAULT_MEAL() : this.sortMeals(this.value)
     };
   },
   watch: {
@@ -50,7 +54,13 @@ export default {
       deep: true
     }
   },
+  created: function() {
+    this.addNewMeal();
+  },
   methods: {
+    sortMeals(meals) {
+      return meals.slice().sort(sortByTime);
+    },
     addNewMeal() {
       const lastMeal = this.meals[this.meals.length - 1];
 

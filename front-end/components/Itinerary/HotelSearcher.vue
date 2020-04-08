@@ -59,6 +59,10 @@ export default {
   computed: {
     filteredHotelArray: function() {
       return hotels.filter(option => {
+        if (this.hotel === null) {
+          return;
+        }
+
         return (
           option
             .toString()

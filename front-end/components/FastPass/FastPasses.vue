@@ -1,22 +1,36 @@
 <template>
   <div>
     <h5 class="title is-5">FastPass</h5>
-    <b-field :message="parkMessage">
-      <b-select
-        ref="park-selector"
-        v-model="park"
-        placeholder="Select a theme park"
-        icon="map-pin"
-      >
-        <option value="Magic Kingdom">Magic Kingdom</option>
-        <option value="Epcot">Epcot</option>
-        <option value="Hollywood Studios">Hollywood Studios</option>
-        <option value="Animal Kingdom">Animal Kingdom</option>
-      </b-select>
-    </b-field>
+    <client-only>
+      <b-field :message="parkMessage">
+        <b-select
+          ref="park-selector"
+          v-model="park"
+          placeholder="Select a theme park"
+          :icon="parkIcon"
+        >
+          <option value="Magic Kingdom">
+            <b-icon :icon="getParkIcon('Magic Kingdom')"></b-icon>
+            Magic Kingdom
+          </option>
+          <option value="Epcot">
+            <b-icon :icon="getParkIcon('Epcot')"></b-icon>
+            Epcot
+          </option>
+          <option value="Hollywood Studios">
+            <b-icon :icon="getParkIcon('Hollywood Studios')"></b-icon>
+            Hollywood Studios
+          </option>
+          <option value="Animal Kingdom">
+            <b-icon :icon="getParkIcon('Animal Kingdom')"></b-icon>
+            Animal Kingdom
+          </option>
+        </b-select>
+      </b-field>
+    </client-only>
     <b-field
-      v-for="(fastPass, fastPassIndex) in fastPasses"
-      v-show="park"
+      v-for="(fastPass, fastPassIndex) in sortedFastPasses"
+      v-show="park != null"
       :key="'fp-key-' + fastPassIndex"
     >
       <b-select
@@ -41,6 +55,7 @@
         editable
         hour-format="12"
         :increment-minutes="5"
+        @blur="fastPasses = sortFastPasses(fastPasses)"
       >
       </b-timepicker>
     </b-field>
@@ -51,6 +66,8 @@
 </template>
 
 <script>
+import sortByTime from '~/assets/js/TimeSort';
+
 const fastPassOptions = {
   'Magic Kingdom': [
     { name: 'Big Thunder Mountain Railroad', tier: 0 },
@@ -153,12 +170,15 @@ export default {
     };
   },
   computed: {
+    parkIcon: function() {
+      return this.getParkIcon(this.park);
+    },
     fastPassMessage: function() {
-      if (!this.fastPassPark) return '';
+      if (!this.park) return '';
 
       const attractions = this.fastPasses.map(fastPass => fastPass.attraction);
 
-      const options = fastPassOptions[this.fastPassPark];
+      const options = fastPassOptions[this.park];
       const matchingAttractions = options.filter(attraction =>
         attractions.includes(attraction.name)
       );
@@ -173,13 +193,15 @@ export default {
       return "More than one Tier 1 FastPass. You can still save your plan this way, but it won't be bookable";
     },
     parkMessage: function() {
-      if (!this.fastPassPark || this.fastPassPark === 'Magic Kingdom')
-        return '';
+      if (!this.park || this.park === 'Magic Kingdom') return '';
 
-      return `${this.fastPassPark} uses a <strong>tiered</strong> FastPass system. Only <strong>one</strong> of your three FastPasses can be a Tier 1 attraction.`;
+      return `${this.park} uses a <strong>tiered</strong> FastPass system. Only <strong>one</strong> of your three FastPasses can be a Tier 1 attraction.`;
     },
     fastPassOptions: function() {
       return fastPassOptions;
+    },
+    sortedFastPasses: function() {
+      return this.fastPasses;
     },
     park: {
       get: function() {
@@ -221,12 +243,28 @@ export default {
     }
   },
   methods: {
+    sortFastPasses: function(fastPasses) {
+      return fastPasses.slice().sort(sortByTime);
+    },
+    getParkIcon: function(park) {
+      if (park === 'Magic Kingdom') {
+        return 'chess-rook';
+      } else if (park === 'Epcot') {
+        return 'globe';
+      } else if (park === 'Animal Kingdom') {
+        return 'hippo';
+      } else if (park === 'Hollywood Studios') {
+        return 'film';
+      }
+
+      return 'map-pin';
+    },
     allowedFastPassOptions: function(currentlySelected) {
-      if (!this.fastPassPark) return '';
+      if (!this.park) return '';
 
       const attractions = this.fastPasses.map(fastPass => fastPass.attraction);
 
-      return fastPassOptions[this.fastPassPark].filter(
+      return fastPassOptions[this.park].filter(
         attraction =>
           !attractions.includes(attraction.name) ||
           attraction.name === currentlySelected
@@ -242,14 +280,14 @@ export default {
     },
     initializeFastPasses: function(initialFastPasses) {
       if (initialFastPasses.length === 3) {
-        return initialFastPasses;
+        return this.sortFastPasses(initialFastPasses);
       }
 
       while (initialFastPasses.length !== 3) {
         initialFastPasses.push({ attraction: null, time: null });
       }
 
-      return initialFastPasses;
+      return this.sortFastPasses(initialFastPasses);
     }
   }
 };

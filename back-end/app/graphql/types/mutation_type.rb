@@ -2,6 +2,13 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :create_itinerary, ItineraryType, null: true do
+      description 'Creates and returns a new, blank itinerary for current user'
+    end
+    def create_itinerary
+      Itinerary.create(user: context[:current_user])
+    end
+
     field :update_itinerary, ItineraryType, null: true do
       description 'Fully update an itinerary'
       argument :attributes, ItineraryInputType, required: true

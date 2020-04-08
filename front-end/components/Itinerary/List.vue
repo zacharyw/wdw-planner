@@ -11,10 +11,22 @@
           {{ props.row.hotel }}
         </b-table-column>
         <b-table-column field="checkIn" label="Check In">
-          {{ props.row.checkIn }}
+          {{
+            props.row.checkIn == null ? '' : props.row.checkIn.substring(0, 10)
+          }}
         </b-table-column>
         <b-table-column field="checkOut" label="Check Out">
-          {{ props.row.checkOut }}
+          {{
+            props.row.checkOut == null
+              ? ''
+              : props.row.checkOut.substring(0, 10)
+          }}
+        </b-table-column>
+        <b-table-column label="Actions">
+          <nuxt-link :to="'/itineraries/' + props.row.id">
+            <b-button type="is-link">View</b-button>
+          </nuxt-link>
+          <b-button type="is-danger">Delete</b-button>
         </b-table-column>
       </template>
     </b-table>

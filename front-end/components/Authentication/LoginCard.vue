@@ -94,14 +94,10 @@ export default {
       }
     },
     login: function() {
-      this.$auth
-        .loginWith('apollo', {
-          email: this.email,
-          password: this.password
-        })
-        .catch(e => {
-          this.error = e + '';
-        });
+      this.$auth.loginWith('apollo', {
+        email: this.email,
+        password: this.password
+      });
     }
   }
 };

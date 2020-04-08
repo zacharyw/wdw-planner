@@ -47,10 +47,12 @@ export default class ApolloScheme {
 
     // Token should have format of "prefix token_type token", so here we split the string
     // and get the token from the end.
-    const tokenParts = token.split(' ');
-    await this.$helpers.onLogin(tokenParts[tokenParts.length - 1]);
+    if (token !== null) {
+      const tokenParts = token.split(' ');
+      await this.$helpers.onLogin(tokenParts[tokenParts.length - 1]);
 
-    return this.$auth.fetchUserOnce();
+      return this.$auth.fetchUserOnce();
+    }
   }
 
   async setUserToken(tokenValue) {
