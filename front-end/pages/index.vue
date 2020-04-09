@@ -2,7 +2,7 @@
   <div class="section">
     <div class="container">
       <List :itinerary-data="itineraries" />
-      <b-button @click="createItinerary">New Itinerary</b-button>
+      <b-button @click="newItinerary">New Itinerary</b-button>
     </div>
   </div>
 </template>
@@ -41,20 +41,8 @@ export default {
     };
   },
   methods: {
-    createItinerary: function() {
-      const client = this.$apollo.getClient();
-
-      const mutation = gql`
-        mutation {
-          createItinerary {
-            id
-          }
-        }
-      `;
-
-      client.mutate({ mutation: mutation }).then(({ data }) => {
-        this.$router.push('/itineraries/' + data.createItinerary.id);
-      });
+    newItinerary: function() {
+      this.$router.push('/itineraries/0');
     }
   }
 };

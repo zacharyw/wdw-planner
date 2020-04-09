@@ -2,21 +2,16 @@
 
 module Types
   class MutationType < Types::BaseObject
-    field :create_itinerary, ItineraryType, null: true do
-      description 'Creates and returns a new, blank itinerary for current user'
-    end
-    def create_itinerary
-      Itinerary.create(user: context[:current_user])
-    end
-
     field :update_itinerary, ItineraryType, null: true do
-      description 'Fully update an itinerary'
+      description 'Fully update an itinerary, or create one if ID does not exist'
       argument :attributes, ItineraryInputType, required: true
     end
     def update_itinerary(attributes:)
       itinerary = Itinerary.where(
         id: attributes.id, user: context[:current_user]
       ).first
+
+      itinerary ||= Itinerary.new(user: context[:current_user])
 
       ActiveRecord::Base.transaction do
         Day.destroy(itinerary.days.map(&:id))
@@ -44,6 +39,18 @@ module Types
           end
         end
       end
+
+      itinerary
+    end
+
+    field :delete_itinerary, ItineraryType, null: true do
+      description 'Deletes itinerary matching given id'
+      argument :id, ID, required: true
+    end
+    def delete_itinerary(id:)
+      itinerary = Itinerary.where(id: id, user: context[:current_user]).first
+
+      itinerary.destroy!
 
       itinerary
     end

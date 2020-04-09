@@ -26,7 +26,11 @@
           <nuxt-link :to="'/itineraries/' + props.row.id">
             <b-button type="is-link">View</b-button>
           </nuxt-link>
-          <b-button type="is-danger">Delete</b-button>
+          <DeleteButton
+            :id="props.row.id"
+            :name="props.row.name"
+            @itinerary-deleted="deleteItinerary"
+          ></DeleteButton>
         </b-table-column>
       </template>
     </b-table>
@@ -34,8 +38,13 @@
 </template>
 
 <script>
+import DeleteButton from '~/components/Itinerary/DeleteButton.vue';
+
 export default {
   name: 'List',
+  components: {
+    DeleteButton
+  },
   props: {
     itineraryData: {
       type: Array,
@@ -48,6 +57,19 @@ export default {
     return {
       itineraries: this.itineraryData
     };
+  },
+  methods: {
+    deleteItinerary: function(id) {
+      let index = null;
+      for (const [i, itinerary] of this.itineraries.entries()) {
+        if (itinerary.id === id) {
+          index = i;
+          break;
+        }
+      }
+
+      this.itineraries.splice(index, 1);
+    }
   }
 };
 </script>

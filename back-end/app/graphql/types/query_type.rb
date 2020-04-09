@@ -17,7 +17,11 @@ module Types
     end
 
     def itinerary(id:)
-      Itinerary.where(id: id, user: context[:current_user]).first
+      itinerary = Itinerary.where(id: id, user: context[:current_user]).first
+
+      itinerary ||= Itinerary.new(user: context[:current_user])
+
+      itinerary
     end
   end
 end

@@ -54,7 +54,10 @@
             <Activities v-model="dayPlan.activities"></Activities>
             <hr />
           </div>
-          <button class="button is-primary">Save Itinerary</button>
+          <button class="button is-primary" :disabled="saving">
+            <span v-show="!saving">Save Itinerary</span>
+            <span v-show="saving">Saving itinerary...</span>
+          </button>
         </form>
       </div>
     </div>
@@ -145,14 +148,15 @@ export default {
     });
 
     return {
-      id: data.itinerary.id,
+      id: data.itinerary.id === null ? 0 : data.itinerary.id,
       name: data.itinerary.name,
       hotel: data.itinerary.hotel,
       dayPlans: days,
       checkIn: data.itinerary.checkIn ? new Date(data.itinerary.checkIn) : null,
       checkOut: data.itinerary.checkOut
         ? new Date(data.itinerary.checkOut)
-        : null
+        : null,
+      saving: false
     };
   },
   mounted: function() {
@@ -195,6 +199,8 @@ export default {
       this.dayPlans = currentPlans.concat(newPlans);
     },
     saveItinerary() {
+      this.saving = true;
+
       const client = this.$apollo.getClient();
 
       const mutation = gql`
@@ -243,7 +249,26 @@ export default {
         }
       };
 
-      client.mutate({ mutation: mutation, variables: variables });
+      client
+        .mutate({ mutation: mutation, variables: variables })
+        .then(({ data }) => {
+          this.id = data.updateItinerary.id;
+          this.saving = false;
+
+          this.$buefy.toast.open({
+            message: 'Itinerary saved!',
+            type: 'is-success'
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          this.saving = false;
+
+          this.$buefy.toast.open({
+            message: 'Itinerary failed to save, please try again.',
+            type: 'is-danger'
+          });
+        });
     }
   }
 };
