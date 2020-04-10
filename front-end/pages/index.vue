@@ -1,8 +1,9 @@
 <template>
   <div class="section">
     <div class="container">
+      <h1 class="title">Itineraries</h1>
       <List :itinerary-data="itineraries" />
-      <b-button @click="newItinerary">New Itinerary</b-button>
+      <b-button @click="newItinerary" id="newButton">New Itinerary</b-button>
     </div>
   </div>
 </template>
@@ -48,4 +49,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#newButton {
+  margin-top: 1rem;
+}
+</style>
