@@ -3,7 +3,7 @@
     <div class="container">
       <h1 class="title">Itineraries</h1>
       <List :itinerary-data="itineraries" />
-      <b-button @click="newItinerary" id="newButton">New Itinerary</b-button>
+      <b-button id="newButton" @click="newItinerary">New Itinerary</b-button>
     </div>
   </div>
 </template>

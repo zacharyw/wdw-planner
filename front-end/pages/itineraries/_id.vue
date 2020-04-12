@@ -25,39 +25,54 @@
             </client-only>
           </b-field>
           <HotelSearcher v-model="hotel" :initial-hotel="hotel"></HotelSearcher>
-          <h3 v-show="dayPlans.length" class="title is-3">
-            Itinerary
-          </h3>
-          <div v-for="(dayPlan, index) in dayPlans" :key="'day-plan-' + index">
-            <h4 class="title is-4">
-              <b-icon icon="calendar" size="is-small"></b-icon>
-              Day {{ index + 1 }}
-              <div class="subtitle is-inline">
-                {{ getDateForDay(index + 1) }} ({{ getDayOfWeek(index + 1) }})
+          <div class="columns">
+            <div class="column">
+              <h3 v-show="dayPlans.length" class="title is-3">
+                Itinerary
+              </h3>
+              <div
+                v-for="(dayPlan, index) in dayPlans"
+                :key="'day-plan-' + index"
+              >
+                <h4 class="title is-4">
+                  <b-icon icon="calendar" size="is-small"></b-icon>
+                  Day {{ index + 1 }}
+                  <div class="subtitle is-inline">
+                    {{ getFullDayString(index + 1) }}
+                  </div>
+                </h4>
+                <FastPasses
+                  v-model="dayPlan.fastPasses"
+                  :initial-park="dayPlan.park"
+                  @park-change="
+                    park => {
+                      dayPlan.park = park;
+                    }
+                  "
+                ></FastPasses>
+                <h5 class="title is-5">Dining</h5>
+                <Dining
+                  v-model="dayPlan.meals"
+                  style="margin-bottom: 0.75rem"
+                ></Dining>
+                <h5 class="title is-5">Other Activities</h5>
+                <Activities v-model="dayPlan.activities"></Activities>
+                <hr />
               </div>
-            </h4>
-            <FastPasses
-              v-model="dayPlan.fastPasses"
-              :initial-park="dayPlan.park"
-              @park-change="
-                park => {
-                  dayPlan.park = park;
-                }
-              "
-            ></FastPasses>
-            <h5 class="title is-5">Dining</h5>
-            <Dining
-              v-model="dayPlan.meals"
-              style="margin-bottom: 0.75rem"
-            ></Dining>
-            <h5 class="title is-5">Other Activities</h5>
-            <Activities v-model="dayPlan.activities"></Activities>
-            <hr />
+              <button class="button is-primary" :disabled="saving">
+                <span v-show="!saving">Save Itinerary</span>
+                <span v-show="saving">Saving itinerary...</span>
+              </button>
+            </div>
+            <div class="column" style="display: flex;justify-content: center;">
+              <TripTimeline
+                :day-plans="dayPlans"
+                :day-formatter="getFullDayString"
+                :name="name"
+                :hotel="hotel"
+              ></TripTimeline>
+            </div>
           </div>
-          <button class="button is-primary" :disabled="saving">
-            <span v-show="!saving">Save Itinerary</span>
-            <span v-show="saving">Saving itinerary...</span>
-          </button>
         </form>
       </div>
     </div>
@@ -71,6 +86,7 @@ import FastPasses from '~/components/FastPass/FastPasses.vue';
 import HotelSearcher from '~/components/Itinerary/HotelSearcher.vue';
 import Dining from '~/components/Itinerary/Dining.vue';
 import Activities from '~/components/Itinerary/Activities.vue';
+import TripTimeline from '~/components/Itinerary/TripTimeline.vue';
 import gql from 'graphql-tag';
 
 export default {
@@ -79,7 +95,8 @@ export default {
     FastPasses,
     HotelSearcher,
     Dining,
-    Activities
+    Activities,
+    TripTimeline
   },
   data() {
     return {
@@ -164,10 +181,13 @@ export default {
   },
   methods: {
     getDateForDay(day) {
-      return format(addDays(this.checkIn, day - 1), 'MM/dd');
+      return format(addDays(this.checkIn, day - 1), 'MM/dd/yy');
     },
     getDayOfWeek(day) {
       return format(addDays(this.checkIn, day - 1), 'eee');
+    },
+    getFullDayString(day) {
+      return this.getDateForDay(day) + ' (' + this.getDayOfWeek(day) + ')';
     },
     setCheckIn(checkIn) {
       this.checkIn = checkIn;

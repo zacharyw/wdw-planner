@@ -67,6 +67,7 @@
 
 <script>
 import sortByTime from '~/assets/js/TimeSort';
+import getParkIcon from '~/assets/js/ParkIcon.js';
 
 const fastPassOptions = {
   'Magic Kingdom': [
@@ -171,7 +172,7 @@ export default {
   },
   computed: {
     parkIcon: function() {
-      return this.getParkIcon(this.park);
+      return getParkIcon(this.park);
     },
     fastPassMessage: function() {
       if (!this.park) return '';
@@ -247,17 +248,7 @@ export default {
       return fastPasses.slice().sort(sortByTime);
     },
     getParkIcon: function(park) {
-      if (park === 'Magic Kingdom') {
-        return 'chess-rook';
-      } else if (park === 'Epcot') {
-        return 'globe';
-      } else if (park === 'Animal Kingdom') {
-        return 'hippo';
-      } else if (park === 'Hollywood Studios') {
-        return 'film';
-      }
-
-      return 'map-pin';
+      return getParkIcon(park);
     },
     allowedFastPassOptions: function(currentlySelected) {
       if (!this.park) return '';
