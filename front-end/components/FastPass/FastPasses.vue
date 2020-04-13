@@ -56,7 +56,7 @@
         editable
         hour-format="12"
         :increment-minutes="5"
-        @blur="fastPasses = sortFastPasses(fastPasses)"
+        @blur="setSortedFastPasses(sortFastPasses(fastPasses))"
         @change="emitFastPasses()"
       >
       </b-timepicker>
@@ -241,6 +241,10 @@ export default {
   methods: {
     sortFastPasses: function(fastPasses) {
       return fastPasses.slice().sort(sortByTime);
+    },
+    setSortedFastPasses: function(sortedFastPasses) {
+      this.fastPasses = sortedFastPasses;
+      this.emitFastPasses();
     },
     getParkIcon: function(park) {
       return getParkIcon(park);

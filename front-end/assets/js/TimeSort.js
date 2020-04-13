@@ -1,21 +1,26 @@
+import { setDate } from 'date-fns';
+
 function sortByTime(a, b) {
-  if (a.time == null && b.time != null) {
+  const aTime = setDate(a.time, 1);
+  const bTime = setDate(b.time, 1);
+
+  if (aTime == null && bTime != null) {
     return 1;
   }
 
-  if (b.time == null && a.time != null) {
+  if (bTime == null && aTime != null) {
     return -1;
   }
 
-  if (b.time == null && a.time == null) {
+  if (bTime == null && aTime == null) {
     return 0;
   }
 
-  if (a.time < b.time) {
+  if (aTime < bTime) {
     return -1;
   }
 
-  if (a.time > b.time) {
+  if (aTime > bTime) {
     return 1;
   }
 
