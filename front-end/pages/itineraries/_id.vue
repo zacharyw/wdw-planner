@@ -25,9 +25,19 @@
             </client-only>
           </b-field>
           <HotelSearcher v-model="hotel" :initial-hotel="hotel"></HotelSearcher>
+          <div class="tabs is-boxed is-hidden-tablet" style="margin-top: 2rem;">
+            <ul>
+              <li :class="activeTab === 'itinerary' ? 'is-active' : ''">
+                <a @click="setActiveTab('itinerary')">Itinerary</a>
+              </li>
+              <li :class="activeTab === 'timeline' ? 'is-active' : ''">
+                <a @click="setActiveTab('timeline')">Timeline</a>
+              </li>
+            </ul>
+          </div>
           <div class="columns">
-            <div class="column">
-              <h3 v-show="dayPlans.length" class="title is-3">
+            <div class="column" v-show="activeTab === 'itinerary'">
+              <h3 v-show="dayPlans.length" class="title is-3 is-hidden-mobile">
                 Itinerary
               </h3>
               <div
@@ -64,7 +74,10 @@
                 <span v-show="saving">Saving itinerary...</span>
               </button>
             </div>
-            <div class="column" style="display: flex;justify-content: center;">
+            <div
+              class="column is-hidden-mobile"
+              style="display: flex;justify-content: center;"
+            >
               <TripTimeline
                 :day-plans="dayPlans"
                 :day-formatter="getFullDayString"
@@ -73,6 +86,15 @@
               ></TripTimeline>
             </div>
           </div>
+          <br />
+          <TripTimeline
+            :day-plans="dayPlans"
+            :day-formatter="getFullDayString"
+            :name="name"
+            :hotel="hotel"
+            class="is-hidden-tablet"
+            v-show="activeTab === 'timeline'"
+          ></TripTimeline>
         </form>
       </div>
     </div>
@@ -105,7 +127,8 @@ export default {
       hotel: '',
       name: '',
       id: null,
-      dayPlans: []
+      dayPlans: [],
+      activeTab: 'itinerary'
     };
   },
   async asyncData({ app, params }) {
@@ -217,6 +240,9 @@ export default {
         });
 
       this.dayPlans = currentPlans.concat(newPlans);
+    },
+    setActiveTab(tab) {
+      this.activeTab = tab;
     },
     saveItinerary() {
       this.saving = true;
