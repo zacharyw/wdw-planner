@@ -1,8 +1,16 @@
 import { setDate } from 'date-fns';
 
 function sortByTime(a, b) {
-  const aTime = setDate(a.time, 1);
-  const bTime = setDate(b.time, 1);
+  let aTime = a.time;
+  let bTime = b.time;
+
+  if (aTime) {
+    aTime = setDate(a.time, 1);
+  }
+
+  if (bTime) {
+    bTime = setDate(b.time, 1);
+  }
 
   if (aTime == null && bTime != null) {
     return 1;
