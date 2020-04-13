@@ -39,6 +39,7 @@
         icon="ticket-alt"
         placeholder="Select FastPass"
         expanded
+        @change="emitFastPasses()"
       >
         <option
           v-for="attraction in allowedFastPassOptions(fastPass.attraction)"
@@ -56,6 +57,7 @@
         hour-format="12"
         :increment-minutes="5"
         @blur="fastPasses = sortFastPasses(fastPasses)"
+        @change="emitFastPasses()"
       >
       </b-timepicker>
     </b-field>
@@ -231,16 +233,9 @@ export default {
           this.fastPassPark = park;
           this.$emit('park-change', park);
           this.fastPasses = this.emptyFastPasses();
+          this.$emit('input', this.emptyFastPasses());
         }
       }
-    }
-  },
-  watch: {
-    fastPasses: {
-      handler: function(oldFastPasses, newFastPasses) {
-        this.$emit('input', newFastPasses);
-      },
-      deep: true
     }
   },
   methods: {
@@ -279,6 +274,9 @@ export default {
       }
 
       return this.sortFastPasses(initialFastPasses);
+    },
+    emitFastPasses() {
+      this.$emit('input', this.fastPasses);
     }
   }
 };

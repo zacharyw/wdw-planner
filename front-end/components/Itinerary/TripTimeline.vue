@@ -96,7 +96,9 @@ export default {
           const fastPassLine = day.fastPasses
             ? day.fastPasses.map(fastPass => {
                 return {
-                  title: 'FP: ' + fastPass.attraction,
+                  title: fastPass.attraction
+                    ? 'FP: ' + fastPass.attraction
+                    : null,
                   time: fastPass.time,
                   type: 'fastpass'
                 };
