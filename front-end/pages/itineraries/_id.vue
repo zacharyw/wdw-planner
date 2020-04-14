@@ -228,7 +228,7 @@ export default {
         return;
       }
 
-      const currentPlans = this.dayPlans.slice(0, days - 1);
+      const currentPlans = this.dayPlans.slice(0, days);
 
       const newPlans = Array(days - currentPlans.length)
         .fill()
