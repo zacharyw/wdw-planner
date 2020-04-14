@@ -48,7 +48,8 @@ export default {
     '@nuxtjs/eslint-module',
     '@nuxtjs/auth',
     '@nuxtjs/proxy',
-    '@nuxtjs/apollo'
+    '@nuxtjs/apollo',
+    'nuxt-clipboard2'
   ],
   auth: {
     redirect: {
@@ -117,5 +118,8 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
+  },
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000'
   }
 };

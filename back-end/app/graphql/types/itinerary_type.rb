@@ -7,6 +7,7 @@ module Types
     field :name, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: true
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :shareToken, String, null: true
 
     field :days, [Types::DayType], null: false
 

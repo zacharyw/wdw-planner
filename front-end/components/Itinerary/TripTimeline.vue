@@ -10,7 +10,7 @@
         <timeline-item>
           <h2 class="title is-4">Day {{ dayIndex + 1 }}</h2>
           <h3 class="subtitle">
-            {{ dayFormatter(dayIndex + 1) }}
+            {{ getFullDayString(dayIndex + 1, checkIn) }}
           </h3>
           <b-icon slot="others" icon="calendar" size="is-medium"></b-icon>
         </timeline-item>
@@ -57,6 +57,7 @@
 <script>
 import sortByTime from '~/assets/js/TimeSort';
 import getParkIcon from '~/assets/js/ParkIcon.js';
+import getFullDayString from '~/assets/js/FullDayString.js';
 import { Timeline, TimelineItem, TimelineTitle } from 'vue-cute-timeline';
 import { format } from 'date-fns';
 
@@ -78,15 +79,13 @@ export default {
       type: String,
       default: ''
     },
-    dayFormatter: {
-      type: Function,
-      default: function(day) {
-        return day;
-      }
-    },
     hotel: {
       type: String,
       default: ''
+    },
+    checkIn: {
+      type: Date,
+      default: null
     }
   },
   computed: {
@@ -172,6 +171,9 @@ export default {
       if (date) {
         return format(date, 'hh:mm aaaa');
       }
+    },
+    getFullDayString: function(day) {
+      return getFullDayString(day, this.checkIn);
     }
   }
 };

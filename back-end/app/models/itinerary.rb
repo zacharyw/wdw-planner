@@ -4,4 +4,13 @@ class Itinerary < ApplicationRecord
   belongs_to :user
 
   has_many :days, dependent: :destroy
+
+  validates :share_token, presence: true
+  validates :share_token, uniqueness: true
+
+  before_validation :generate_token, on: :create
+
+  def generate_token
+    self.share_token = SecureRandom.urlsafe_base64(64, false)
+  end
 end

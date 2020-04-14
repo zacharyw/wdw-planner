@@ -2,6 +2,22 @@
   <div>
     <div class="section">
       <div class="container">
+        <b-field
+          label="Share Link (Can view, but not edit)"
+          label-position="on-border"
+        >
+          <b-input
+            :value="shareLink"
+            v-if="shareToken !== null && shareToken !== ''"
+            readonly
+            expanded
+          ></b-input>
+          <p class="control">
+            <b-button class="button is-primary" @click="copyShareLink">
+              Copy
+            </b-button>
+          </p>
+        </b-field>
         <form @submit.prevent="saveItinerary">
           <b-field label="Name" message="Give your trip a nickname">
             <b-input
@@ -80,18 +96,18 @@
             >
               <TripTimeline
                 :day-plans="dayPlans"
-                :day-formatter="getFullDayString"
                 :name="name"
                 :hotel="hotel"
+                :check-in="checkIn"
               ></TripTimeline>
             </div>
           </div>
           <br />
           <TripTimeline
             :day-plans="dayPlans"
-            :day-formatter="getFullDayString"
             :name="name"
             :hotel="hotel"
+            :check-in="checkIn"
             class="is-hidden-tablet"
             v-show="activeTab === 'timeline'"
           ></TripTimeline>
@@ -103,13 +119,14 @@
 
 <script>
 import HotelDatePicker from 'vue-hotel-datepicker';
-import { addDays, format, differenceInDays } from 'date-fns';
+import { differenceInDays } from 'date-fns';
 import FastPasses from '~/components/FastPass/FastPasses.vue';
 import HotelSearcher from '~/components/Itinerary/HotelSearcher.vue';
 import Dining from '~/components/Itinerary/Dining.vue';
 import Activities from '~/components/Itinerary/Activities.vue';
 import TripTimeline from '~/components/Itinerary/TripTimeline.vue';
 import gql from 'graphql-tag';
+import getFullDayString from '~/assets/js/FullDayString.js';
 
 export default {
   components: {
@@ -131,7 +148,7 @@ export default {
       activeTab: 'itinerary'
     };
   },
-  async asyncData({ app, params }) {
+  async asyncData({ app, env, params }) {
     const { data } = await app.apolloProvider.defaultClient.query({
       query: gql`
         query itinerary($id: ID!) {
@@ -142,6 +159,7 @@ export default {
             checkIn
             checkOut
             createdAt
+            shareToken
             days {
               park
               fastPasses {
@@ -191,6 +209,8 @@ export default {
       id: data.itinerary.id === null ? 0 : data.itinerary.id,
       name: data.itinerary.name,
       hotel: data.itinerary.hotel,
+      shareToken: data.itinerary.shareToken,
+      shareLink: env.baseUrl + '/itinerary/' + data.itinerary.shareToken,
       dayPlans: days,
       checkIn: data.itinerary.checkIn ? new Date(data.itinerary.checkIn) : null,
       checkOut: data.itinerary.checkOut
@@ -203,14 +223,8 @@ export default {
     this.setCheckOut(this.checkOut);
   },
   methods: {
-    getDateForDay(day) {
-      return format(addDays(this.checkIn, day - 1), 'MM/dd/yy');
-    },
-    getDayOfWeek(day) {
-      return format(addDays(this.checkIn, day - 1), 'eee');
-    },
     getFullDayString(day) {
-      return this.getDateForDay(day) + ' (' + this.getDayOfWeek(day) + ')';
+      return getFullDayString(day, this.checkIn);
     },
     setCheckIn(checkIn) {
       this.checkIn = checkIn;
@@ -243,6 +257,13 @@ export default {
     },
     setActiveTab(tab) {
       this.activeTab = tab;
+    },
+    async copyShareLink() {
+      try {
+        await this.$copyText(this.shareLink);
+      } catch (e) {
+        console.error(e);
+      }
     },
     saveItinerary() {
       this.saving = true;
