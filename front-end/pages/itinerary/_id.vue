@@ -1,15 +1,17 @@
 <template>
   <div class="section">
     <div class="container">
-      <b-button
-        type="is-primary"
-        @click="copyItinerary"
-        style="margin-bottom: 1rem;"
-        :disabled="copying"
-      >
-        <span v-show="!copying">Make a Copy</span>
-        <span v-show="copying">Copying...</span>
-      </b-button>
+      <b-tooltip label="Save a copy of this itinerary to your account">
+        <b-button
+          type="is-primary"
+          @click="copyItinerary"
+          style="margin-bottom: 1rem;"
+          :disabled="copying"
+        >
+          <span v-show="!copying">Make a Copy</span>
+          <span v-show="copying">Copying...</span>
+        </b-button>
+      </b-tooltip>
       <TripTimeline
         :day-plans="dayPlans"
         :check-in="checkIn"
