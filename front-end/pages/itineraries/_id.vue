@@ -9,9 +9,10 @@
         >
           <b-input :value="shareLink" readonly expanded></b-input>
           <p class="control">
-            <b-button class="button is-primary" @click="copyShareLink">
-              Copy
-            </b-button>
+            <CopyShareButton
+              :share-link="shareLink"
+              :show-tooltip="false"
+            ></CopyShareButton>
           </p>
         </b-field>
         <form @submit.prevent="saveItinerary">
@@ -121,6 +122,7 @@ import HotelSearcher from '~/components/Itinerary/HotelSearcher.vue';
 import Dining from '~/components/Itinerary/Dining.vue';
 import Activities from '~/components/Itinerary/Activities.vue';
 import TripTimeline from '~/components/Itinerary/TripTimeline.vue';
+import CopyShareButton from '~/components/Itinerary/CopyShareButton.vue';
 import gql from 'graphql-tag';
 import getFullDayString from '~/assets/js/FullDayString.js';
 
@@ -131,7 +133,8 @@ export default {
     HotelSearcher,
     Dining,
     Activities,
-    TripTimeline
+    TripTimeline,
+    CopyShareButton
   },
   data() {
     return {
@@ -253,18 +256,6 @@ export default {
     },
     setActiveTab(tab) {
       this.activeTab = tab;
-    },
-    async copyShareLink() {
-      try {
-        await this.$copyText(this.shareLink);
-
-        this.$buefy.toast.open({
-          message: 'Link copied!',
-          type: 'is-success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
     },
     saveItinerary() {
       this.saving = true;

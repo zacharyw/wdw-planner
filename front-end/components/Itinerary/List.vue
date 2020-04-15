@@ -31,6 +31,11 @@
             :name="props.row.name"
             @itinerary-deleted="deleteItinerary"
           ></DeleteButton>
+          <CopyShareButton
+            :share-link="baseUrl + '/itinerary/' + props.row.shareToken"
+            button-type="is-light"
+            button-text="Copy Share Link"
+          ></CopyShareButton>
         </b-table-column>
       </template>
     </b-table>
@@ -39,11 +44,13 @@
 
 <script>
 import DeleteButton from '~/components/Itinerary/DeleteButton.vue';
+import CopyShareButton from '~/components/Itinerary/CopyShareButton.vue';
 
 export default {
   name: 'List',
   components: {
-    DeleteButton
+    DeleteButton,
+    CopyShareButton
   },
   props: {
     itineraryData: {
@@ -55,7 +62,8 @@ export default {
   },
   data() {
     return {
-      itineraries: this.itineraryData
+      itineraries: this.itineraryData,
+      baseUrl: process.env.baseUrl
     };
   },
   methods: {

@@ -32,6 +32,7 @@ export default {
             hotel
             checkIn
             checkOut
+            shareToken
           }
         }
       `
