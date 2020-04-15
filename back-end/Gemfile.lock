@@ -54,6 +54,8 @@ GEM
     debase (0.2.5.beta1)
       debase-ruby_core_source (>= 0.10.2)
     debase-ruby_core_source (0.10.7)
+    deep_cloneable (3.0.0)
+      activerecord (>= 3.1.0, < 7)
     devise (4.6.2)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -212,6 +214,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.5)
   byebug
   debase (= 0.2.5.beta1)
+  deep_cloneable (~> 3.0.0)
   devise (~> 4.6)
   devise-jwt (~> 0.5.9)
   graphql

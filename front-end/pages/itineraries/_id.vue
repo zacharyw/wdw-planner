@@ -261,6 +261,11 @@ export default {
     async copyShareLink() {
       try {
         await this.$copyText(this.shareLink);
+
+        this.$buefy.toast.open({
+          message: 'Link copied!',
+          type: 'is-success'
+        });
       } catch (e) {
         console.error(e);
       }

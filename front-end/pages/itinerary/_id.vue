@@ -1,10 +1,23 @@
 <template>
-  <TripTimeline
-    :day-plans="dayPlans"
-    :check-in="checkIn"
-    :name="name"
-    :hotel="hotel"
-  ></TripTimeline>
+  <div class="section">
+    <div class="container">
+      <b-button
+        type="is-primary"
+        @click="copyItinerary"
+        style="margin-bottom: 1rem;"
+        :disabled="copying"
+      >
+        <span v-show="!copying">Make a Copy</span>
+        <span v-show="copying">Copying...</span>
+      </b-button>
+      <TripTimeline
+        :day-plans="dayPlans"
+        :check-in="checkIn"
+        :name="name"
+        :hotel="hotel"
+      ></TripTimeline>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -20,7 +33,8 @@ export default {
       checkIn: null,
       hotel: '',
       name: '',
-      dayPlans: []
+      dayPlans: [],
+      copying: false
     };
   },
   async asyncData({ app, env, params }) {
@@ -82,8 +96,50 @@ export default {
       dayPlans: days,
       checkIn: data.sharedItinerary.checkIn
         ? new Date(data.sharedItinerary.checkIn)
-        : null
+        : null,
+      shareToken: params.id
     };
+  },
+  methods: {
+    copyItinerary: function() {
+      this.copying = true;
+      const client = this.$apollo.getClient();
+
+      const mutation = gql`
+        mutation cloneItinerary($shareToken: ID!) {
+          cloneItinerary(shareToken: $shareToken) {
+            id
+          }
+        }
+      `;
+
+      const variables = {
+        shareToken: this.shareToken
+      };
+
+      client
+        .mutate({ mutation: mutation, variables: variables })
+        .then(({ data }) => {
+          const id = data.cloneItinerary.id;
+
+          this.copying = false;
+
+          this.$buefy.toast.open({
+            message: 'Itinerary copied!',
+            type: 'is-success'
+          });
+
+          this.$router.push('/itineraries/' + id);
+        })
+        .catch(error => {
+          console.error(error);
+
+          this.$buefy.toast.open({
+            message: 'Itinerary failed to copy, please try again.',
+            type: 'is-danger'
+          });
+        });
+    }
   }
 };
 </script>

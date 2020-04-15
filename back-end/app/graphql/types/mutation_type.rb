@@ -55,6 +55,27 @@ module Types
       itinerary
     end
 
+    field :clone_itinerary, ItineraryType, null: true do
+      description 'Given a share token, deep clones the itinerary to the current user'
+      argument :share_token, ID, required: true
+    end
+    def clone_itinerary(share_token:)
+      itinerary = Itinerary.find_by(share_token: share_token)
+
+      clone = itinerary.deep_clone(
+        include: {
+          days: %i[fast_passes activities meals]
+        },
+        validate: false
+      )
+
+      clone.user = context[:current_user]
+
+      clone.save!
+
+      clone
+    end
+
     ## LOGIN
     field :login, UserType, null: true do
       description 'Login for users'
