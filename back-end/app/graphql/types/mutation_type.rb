@@ -69,11 +69,12 @@ module Types
         validate: false
       )
 
-      clone.user = context[:current_user]
+      clone.tap do |c|
+        c.user = context[:current_user]
+        c.generate_token
 
-      clone.save!
-
-      clone
+        c.save!
+      end
     end
 
     ## LOGIN

@@ -5,13 +5,9 @@
         <b-field
           label="Share Link (Can view, but not edit)"
           label-position="on-border"
+          v-if="shareToken !== null && shareToken !== ''"
         >
-          <b-input
-            :value="shareLink"
-            v-if="shareToken !== null && shareToken !== ''"
-            readonly
-            expanded
-          ></b-input>
+          <b-input :value="shareLink" readonly expanded></b-input>
           <p class="control">
             <b-button class="button is-primary" @click="copyShareLink">
               Copy

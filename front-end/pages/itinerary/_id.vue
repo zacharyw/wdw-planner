@@ -125,7 +125,7 @@ export default {
           this.copying = false;
 
           this.$buefy.toast.open({
-            message: 'Itinerary copied!',
+            message: 'Itinerary copied and saved!',
             type: 'is-success'
           });
 
