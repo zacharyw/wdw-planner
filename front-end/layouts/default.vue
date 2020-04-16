@@ -18,35 +18,80 @@
       </div>
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item">
-            Home
-          </a>
-
-          <a class="navbar-item">
-            Documentation
+          <a class="navbar-item" href="/">
+            My Itineraries
           </a>
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
-              More
+              Guides
             </a>
 
             <div class="navbar-dropdown">
               <a class="navbar-item">
-                About
+                Basic Disney World Planning Guide
               </a>
               <a class="navbar-item">
-                Jobs
-              </a>
-              <a class="navbar-item">
-                Contact
+                Disney World Resort Guide
               </a>
               <hr class="navbar-divider" />
               <a class="navbar-item">
-                Report an issue
+                Basic FastPass+ Guide
+              </a>
+              <a class="navbar-item">
+                Magic Kingdom FastPass Guide
+              </a>
+              <a class="navbar-item">
+                Epcot FastPass Guide
+              </a>
+              <a class="navbar-item">
+                Hollywood Studios FastPass Guide
+              </a>
+              <a class="navbar-item">
+                Animal Kingdom FastPass Guide
+              </a>
+              <hr class="navbar-divider" />
+              <a class="navbar-item">
+                Basic Dining Guide
               </a>
             </div>
           </div>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              Sample Itineraries
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item">
+                Two Person / Couple's Disney World Itinerary
+              </a>
+              <hr class="navbar-divider" />
+              <a class="navbar-item">
+                Single Day Magic Kingdom Itinerary
+              </a>
+              <a class="navbar-item">
+                Single Day Epcot Itinerary
+              </a>
+              <a class="navbar-item">
+                Single Day Hollywood Studios Itinerary
+              </a>
+              <a class="navbar-item">
+                Single Day Animal Kingdom Itinerary
+              </a>
+              <a class="navbar-item">
+                Rest & Relaxation Day at Disney World Itinerary
+              </a>
+              <hr class="navbar-divider" />
+              <a class="navbar-item">
+                Four Day Disney World Itinerary
+              </a>
+              <a class="navbar-item">
+                Five Day Disney World Itinerary
+              </a>
+            </div>
+          </div>
+          <a class="navbar-item">
+            Contact
+          </a>
         </div>
 
         <div class="navbar-end">
