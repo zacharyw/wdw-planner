@@ -49,7 +49,8 @@ export default {
     '@nuxtjs/auth',
     '@nuxtjs/proxy',
     '@nuxtjs/apollo',
-    'nuxt-clipboard2'
+    'nuxt-clipboard2',
+    'nuxt-feature-toggle'
   ],
   auth: {
     redirect: {
@@ -92,6 +93,11 @@ export default {
         httpEndpoint: 'http://rails:8080/graphql',
         browserHttpEndpoint: 'http://localhost:8080/graphql'
       }
+    }
+  },
+  featureToggle: {
+    toggles: {
+      'guides-menu': false
     }
   },
   router: {
