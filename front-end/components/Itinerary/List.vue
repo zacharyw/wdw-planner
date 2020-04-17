@@ -24,7 +24,10 @@
         </b-table-column>
         <b-table-column label="Actions">
           <nuxt-link :to="'/itineraries/' + props.row.id">
-            <b-button type="is-link">View</b-button>
+            <b-button type="is-link">Edit</b-button>
+          </nuxt-link>
+          <nuxt-link :to="'/itinerary/' + props.row.shareToken">
+            <b-button type="is-link is-info">View</b-button>
           </nuxt-link>
           <DeleteButton
             :id="props.row.id"

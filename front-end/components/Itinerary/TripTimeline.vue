@@ -6,6 +6,9 @@
           {{ name }}
         </h1>
       </timeline-title>
+      <timeline-item v-show="notes && notes.length > 0">
+        {{ notes }}
+      </timeline-item>
       <span v-for="(day, dayIndex) in timeline" :key="dayIndex">
         <timeline-item>
           <h2 class="title is-4">Day {{ dayIndex + 1 }}</h2>
@@ -19,6 +22,9 @@
             Check in at {{ hotel }}
           </p>
           <b-icon slot="others" icon="hotel" size="is-small"></b-icon>
+        </timeline-item>
+        <timeline-item v-show="day.notes && day.notes.length > 0">
+          {{ day.notes }}
         </timeline-item>
         <timeline-item v-if="day.park">
           <h3 style="padding-top: .6rem;" class="title is-5">
@@ -83,6 +89,10 @@ export default {
       type: String,
       default: ''
     },
+    notes: {
+      type: String,
+      default: ''
+    },
     checkIn: {
       type: Date,
       default: null
@@ -128,7 +138,7 @@ export default {
             .concat(diningLine, activityLine)
             .sort(sortByTime);
 
-          return { park: day.park, dayLine: dayLine };
+          return { park: day.park, notes: day.notes, dayLine: dayLine };
         })
         .filter(day => day !== []);
     }

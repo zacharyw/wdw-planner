@@ -20,11 +20,15 @@ module Types
           name: attributes.name,
           hotel: attributes.hotel,
           check_in: attributes.check_in,
-          check_out: attributes.check_out
+          check_out: attributes.check_out,
+          notes: attributes.notes
         )
 
         attributes.days.each do |day_attrs|
-          day = itinerary.days.create!(park: day_attrs.park)
+          day = itinerary.days.create!(
+            park: day_attrs.park,
+            notes: day_attrs.notes
+          )
 
           day_attrs.fast_passes.each do |fast_pass_attrs|
             day.fast_passes.create!(fast_pass_attrs.to_h)

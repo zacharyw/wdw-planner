@@ -5,7 +5,7 @@
         <b-button
           type="is-primary"
           @click="copyItinerary"
-          style="margin-bottom: 1rem;"
+          style="margin-bottom: 2rem;"
           :disabled="copying"
         >
           <span v-show="!copying">Make a Copy</span>
@@ -15,6 +15,7 @@
       <TripTimeline
         :day-plans="dayPlans"
         :check-in="checkIn"
+        :notes="notes"
         :name="name"
         :hotel="hotel"
       ></TripTimeline>
@@ -47,8 +48,10 @@ export default {
             name
             hotel
             checkIn
+            notes
             days {
               park
+              notes
               fastPasses {
                 attraction
                 time
@@ -95,6 +98,7 @@ export default {
     return {
       name: data.sharedItinerary.name,
       hotel: data.sharedItinerary.hotel,
+      notes: data.sharedItinerary.notes,
       dayPlans: days,
       checkIn: data.sharedItinerary.checkIn
         ? new Date(data.sharedItinerary.checkIn)

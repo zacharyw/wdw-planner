@@ -38,6 +38,9 @@
             </client-only>
           </b-field>
           <HotelSearcher v-model="hotel" :initial-hotel="hotel"></HotelSearcher>
+          <b-field label="Notes">
+            <b-input v-model="notes" type="textarea"></b-input>
+          </b-field>
           <div class="tabs is-boxed is-hidden-tablet" style="margin-top: 2rem;">
             <ul>
               <li :class="activeTab === 'itinerary' ? 'is-active' : ''">
@@ -79,7 +82,13 @@
                   style="margin-bottom: 0.75rem"
                 ></Dining>
                 <h5 class="title is-5">Other Activities</h5>
-                <Activities v-model="dayPlan.activities"></Activities>
+                <Activities
+                  v-model="dayPlan.activities"
+                  style="margin-bottom: 1.25rem"
+                ></Activities>
+                <b-field label="Notes" label-position="on-border">
+                  <b-input v-model="dayPlan.notes" type="textarea"></b-input>
+                </b-field>
                 <hr />
               </div>
               <button class="button is-primary" :disabled="saving">
@@ -142,6 +151,7 @@ export default {
       checkOut: null,
       hotel: '',
       name: '',
+      notes: '',
       id: null,
       dayPlans: [],
       activeTab: 'itinerary'
@@ -159,8 +169,10 @@ export default {
             checkOut
             createdAt
             shareToken
+            notes
             days {
               park
+              notes
               fastPasses {
                 attraction
                 time
@@ -208,6 +220,7 @@ export default {
       id: data.itinerary.id === null ? 0 : data.itinerary.id,
       name: data.itinerary.name,
       hotel: data.itinerary.hotel,
+      notes: data.itinerary.notes,
       shareToken: data.itinerary.shareToken,
       shareLink: env.baseUrl + '/itinerary/' + data.itinerary.shareToken,
       dayPlans: days,
@@ -273,6 +286,7 @@ export default {
       const days = this.dayPlans.map(day => {
         return {
           park: day.park,
+          notes: day.notes,
           fastPasses: day.fastPasses
             ? day.fastPasses
                 .filter(fp => fp.attraction !== null || fp.time !== null)
@@ -302,6 +316,7 @@ export default {
           id: this.id,
           name: this.name,
           hotel: this.hotel,
+          notes: this.notes,
           checkIn: this.checkIn,
           checkOut: this.checkOut,
           days: days

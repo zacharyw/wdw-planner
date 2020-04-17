@@ -6,6 +6,7 @@ module Types
     argument :hotel, String, required: false
     argument :check_in, String, required: false
     argument :check_out, String, required: false
+    argument :notes, String, required: false
     argument :days, [DayInputType], required: false
   end
 end

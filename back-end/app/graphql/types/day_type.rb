@@ -3,6 +3,7 @@ module Types
     field :id, ID, null: false
     field :itinerary_id, ID, null: false
     field :park, String, null: true
+    field :notes, String, null: true
     field :date, GraphQL::Types::ISO8601Date, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
