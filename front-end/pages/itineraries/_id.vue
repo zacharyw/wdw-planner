@@ -104,6 +104,7 @@
                 :day-plans="dayPlans"
                 :name="name"
                 :hotel="hotel"
+                :notes="notes"
                 :check-in="checkIn"
                 style="margin-top: .75rem;"
               ></TripTimeline>
@@ -114,6 +115,7 @@
             <TripTimeline
               :day-plans="dayPlans"
               :name="name"
+              :notes="notes"
               :hotel="hotel"
               :check-in="checkIn"
             ></TripTimeline>
