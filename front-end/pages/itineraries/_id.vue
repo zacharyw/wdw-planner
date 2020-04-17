@@ -105,18 +105,27 @@
                 :name="name"
                 :hotel="hotel"
                 :check-in="checkIn"
+                style="margin-top: .75rem;"
               ></TripTimeline>
             </div>
           </div>
           <br />
-          <TripTimeline
-            :day-plans="dayPlans"
-            :name="name"
-            :hotel="hotel"
-            :check-in="checkIn"
-            class="is-hidden-tablet"
-            v-show="activeTab === 'timeline'"
-          ></TripTimeline>
+          <div v-show="activeTab === 'timeline'" class="is-hidden-tablet">
+            <TripTimeline
+              :day-plans="dayPlans"
+              :name="name"
+              :hotel="hotel"
+              :check-in="checkIn"
+            ></TripTimeline>
+            <button
+              class="button is-primary"
+              style="margin-top: 1rem;"
+              :disabled="saving"
+            >
+              <span v-show="!saving">Save Itinerary</span>
+              <span v-show="saving">Saving itinerary...</span>
+            </button>
+          </div>
         </form>
       </div>
     </div>
