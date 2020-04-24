@@ -9,6 +9,7 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: true
     field :shareToken, String, null: true
     field :notes, String, null: true
+    field :public, Boolean, null: false
 
     field :days, [Types::DayType], null: false
 

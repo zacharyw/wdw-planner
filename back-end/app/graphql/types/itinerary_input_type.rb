@@ -8,5 +8,6 @@ module Types
     argument :check_out, String, required: false
     argument :notes, String, required: false
     argument :days, [DayInputType], required: false
+    argument :public, Boolean, required: true
   end
 end

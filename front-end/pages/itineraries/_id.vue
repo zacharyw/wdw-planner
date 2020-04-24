@@ -3,7 +3,11 @@
     <div class="section">
       <div class="container">
         <b-field
-          v-if="shareToken !== null && shareToken !== ''"
+          v-if="
+            shareToken !== null &&
+              shareToken !== '' &&
+              !(!isPublic && initialIsPublic)
+          "
           label="Share Link (Can view, but not edit)"
           label-position="on-border"
         >
@@ -24,6 +28,24 @@
               placeholder="Halloween 2099"
             ></b-input>
           </b-field>
+          <div class="field">
+            <b-switch v-model="isPublic">
+              {{ isPublic ? 'Public' : 'Private' }}
+            </b-switch>
+            <p class="help">
+              Public itineraries are visible on the
+              <nuxt-link to="/itineraries/browse">browse itineraries</nuxt-link>
+              page. Exact dates of travel are not shown.
+            </p>
+            <p
+              class="help"
+              v-if="shareToken !== null && !isPublic && initialIsPublic"
+            >
+              Changing from public to private will reset the share link for this
+              itinerary. After saving reshare the new link with anyone you want
+              to be able to view this itinerary.
+            </p>
+          </div>
           <b-field
             label="Check-In > Check-Out"
             message="How many nights will you be staying?"
@@ -165,7 +187,8 @@ export default {
       notes: '',
       id: null,
       dayPlans: [],
-      activeTab: 'itinerary'
+      activeTab: 'itinerary',
+      isPublic: true
     };
   },
   async asyncData({ app, env, params }) {
@@ -181,6 +204,7 @@ export default {
             createdAt
             shareToken
             notes
+            public
             days {
               park
               notes
@@ -232,8 +256,10 @@ export default {
       name: data.itinerary.name,
       hotel: data.itinerary.hotel,
       notes: data.itinerary.notes,
+      isPublic: data.itinerary.public,
+      initialIsPublic: data.itinerary.public,
       shareToken: data.itinerary.shareToken,
-      shareLink: env.baseUrl + '/itinerary/' + data.itinerary.shareToken,
+      baseUrl: env.baseUrl + '/itinerary/',
       dayPlans: days,
       checkIn: data.itinerary.checkIn ? new Date(data.itinerary.checkIn) : null,
       checkOut: data.itinerary.checkOut
@@ -244,6 +270,11 @@ export default {
   },
   mounted: function() {
     this.setCheckOut(this.checkOut);
+  },
+  computed: {
+    shareLink() {
+      return this.baseUrl + this.shareToken;
+    }
   },
   methods: {
     getFullDayString(day) {
@@ -290,6 +321,7 @@ export default {
         mutation updateItinerary($attributes: ItineraryInput!) {
           updateItinerary(attributes: $attributes) {
             id
+            shareToken
           }
         }
       `;
@@ -297,7 +329,7 @@ export default {
       const days = this.dayPlans.map(day => {
         return {
           park: day.park,
-          notes: day.notes,
+          notes: day.nosates,
           fastPasses: day.fastPasses
             ? day.fastPasses
                 .filter(fp => fp.attraction !== null || fp.time !== null)
@@ -328,6 +360,7 @@ export default {
           name: this.name,
           hotel: this.hotel,
           notes: this.notes,
+          public: this.isPublic,
           checkIn: this.checkIn,
           checkOut: this.checkOut,
           days: days
@@ -337,13 +370,20 @@ export default {
       client
         .mutate({ mutation: mutation, variables: variables })
         .then(({ data }) => {
+          const isNew = this.id === 0;
           this.id = data.updateItinerary.id;
           this.saving = false;
+          this.initialIsPublic = this.isPublic;
+          this.shareToken = data.updateItinerary.shareToken;
 
           this.$buefy.toast.open({
             message: 'Itinerary saved!',
             type: 'is-success'
           });
+
+          if (isNew) {
+            this.$router.push('/itineraries/' + this.id);
+          }
         })
         .catch(error => {
           console.error(error);

@@ -21,7 +21,8 @@ module Types
           hotel: attributes.hotel,
           check_in: attributes.check_in,
           check_out: attributes.check_out,
-          notes: attributes.notes
+          notes: attributes.notes,
+          public: attributes.public
         )
 
         attributes.days.each do |day_attrs|
@@ -44,7 +45,7 @@ module Types
         end
       end
 
-      itinerary
+      itinerary.reload
     end
 
     field :delete_itinerary, ItineraryType, null: true do

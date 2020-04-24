@@ -58,7 +58,7 @@
           <b-table-column field="hotel" label="Hotel" sortable>
             {{ props.row.hotel }}
           </b-table-column>
-          <b-table-column label="Nights" sortable>
+          <b-table-column field="days" label="Nights" sortable>
             {{ props.row.days.length - 1 }}
           </b-table-column>
           <b-table-column label="Parks">
