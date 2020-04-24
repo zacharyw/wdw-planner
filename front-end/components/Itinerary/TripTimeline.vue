@@ -12,7 +12,7 @@
       <span v-for="(day, dayIndex) in timeline" :key="dayIndex">
         <timeline-item>
           <h2 class="title is-4">Day {{ dayIndex + 1 }}</h2>
-          <h3 class="subtitle">
+          <h3 class="subtitle" v-if="showDates">
             {{ getFullDayString(dayIndex + 1, checkIn) }}
           </h3>
           <b-icon slot="others" icon="calendar" size="is-medium"></b-icon>
@@ -96,6 +96,10 @@ export default {
     checkIn: {
       type: Date,
       default: null
+    },
+    showDates: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

@@ -21,6 +21,9 @@
           <a class="navbar-item" href="/">
             My Itineraries
           </a>
+          <a class="navbar-item" href="/itineraries/browse">
+            Browse Itineraries
+          </a>
 
           <feature-toggle name="guides-menu" :value="true">
             <div class="navbar-item has-dropdown is-hoverable">

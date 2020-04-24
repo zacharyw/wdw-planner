@@ -1,21 +1,21 @@
 <template>
   <div>
-    <b-table :data="itineraries">
+    <b-table :data="itineraries" default-sort="name">
       <template slot-scope="props">
-        <b-table-column field="name" label="Name">
+        <b-table-column field="name" label="Name" sortable>
           <nuxt-link :to="'/itineraries/' + props.row.id">
             {{ props.row.name }}
           </nuxt-link>
         </b-table-column>
-        <b-table-column field="hotel" label="Hotel">
+        <b-table-column field="hotel" label="Hotel" sortable>
           {{ props.row.hotel }}
         </b-table-column>
-        <b-table-column field="checkIn" label="Check In">
+        <b-table-column field="checkIn" label="Check In" sortable>
           {{
             props.row.checkIn == null ? '' : props.row.checkIn.substring(0, 10)
           }}
         </b-table-column>
-        <b-table-column field="checkOut" label="Check Out">
+        <b-table-column field="checkOut" label="Check Out" sortable>
           {{
             props.row.checkOut == null
               ? ''

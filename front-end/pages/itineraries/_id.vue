@@ -3,9 +3,9 @@
     <div class="section">
       <div class="container">
         <b-field
+          v-if="shareToken !== null && shareToken !== ''"
           label="Share Link (Can view, but not edit)"
           label-position="on-border"
-          v-if="shareToken !== null && shareToken !== ''"
         >
           <b-input :value="shareLink" readonly expanded></b-input>
           <p class="control">
@@ -52,7 +52,7 @@
             </ul>
           </div>
           <div class="columns">
-            <div class="column" v-show="activeTab === 'itinerary'">
+            <div v-show="activeTab === 'itinerary'" class="column">
               <h3 v-show="dayPlans.length" class="title is-3 is-hidden-mobile">
                 Itinerary
               </h3>
