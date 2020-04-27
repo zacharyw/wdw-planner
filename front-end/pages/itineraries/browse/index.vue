@@ -50,6 +50,9 @@
       <br />
       <b-table :data="itineraries" default-sort="hotel" detailed>
         <template slot-scope="props">
+          <b-table-column field="popularity" label="Popularity" sortable>
+            {{ props.row.popularity }}
+          </b-table-column>
           <b-table-column field="name" label="Name" sortable>
             <nuxt-link :to="'/itinerary/' + props.row.shareToken">
               {{ props.row.name }}
@@ -133,6 +136,7 @@ export default {
             checkIn
             checkOut
             shareToken
+            popularity
             days {
               park
             }

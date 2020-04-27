@@ -41,7 +41,7 @@ module Types
     end
 
     def search_itineraries(params:)
-      query = Itinerary.includes(:days).where(public: true)
+      query = Itinerary.includes(:days, :itinerary_copies).where(public: true)
 
       if params.parks.present?
         parks = params.parks.map do |park|

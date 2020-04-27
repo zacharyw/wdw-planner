@@ -77,9 +77,14 @@ module Types
       clone.tap do |c|
         c.user = context[:current_user]
         c.generate_token
-
-        c.save!
       end
+
+      ActiveRecord::Base.transaction do
+        clone.save!
+        ItineraryCopy.new(user: context[:current_user], itinerary: itinerary).save!
+      end
+
+      clone
     end
 
     ## LOGIN

@@ -10,6 +10,7 @@ module Types
     field :shareToken, String, null: true
     field :notes, String, null: true
     field :public, Boolean, null: false
+    field :popularity, Int, null: true
 
     field :days, [Types::DayType], null: false
 

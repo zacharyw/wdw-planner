@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_24_222530) do
+ActiveRecord::Schema.define(version: 2020_04_27_124853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,15 @@ ActiveRecord::Schema.define(version: 2020_04_24_222530) do
     t.index ["user_id"], name: "index_itineraries_on_user_id"
   end
 
+  create_table "itinerary_copies", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "itinerary_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["itinerary_id"], name: "index_itinerary_copies_on_itinerary_id"
+    t.index ["user_id"], name: "index_itinerary_copies_on_user_id"
+  end
+
   create_table "meals", force: :cascade do |t|
     t.bigint "day_id"
     t.string "restaurant"
@@ -102,6 +111,8 @@ ActiveRecord::Schema.define(version: 2020_04_24_222530) do
   add_foreign_key "days", "itineraries"
   add_foreign_key "fast_passes", "days"
   add_foreign_key "itineraries", "users"
+  add_foreign_key "itinerary_copies", "itineraries"
+  add_foreign_key "itinerary_copies", "users"
   add_foreign_key "meals", "days"
   add_foreign_key "whitelisted_jwts", "users", on_delete: :cascade
 end

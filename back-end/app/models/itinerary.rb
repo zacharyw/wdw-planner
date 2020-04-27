@@ -5,6 +5,7 @@ class Itinerary < ApplicationRecord
 
   has_many :days, dependent: :destroy
   has_many :favorites, dependent: :destroy
+  has_many :itinerary_copies, dependent: :destroy
 
   validates :share_token, presence: true
   validates :share_token, uniqueness: true
@@ -17,5 +18,9 @@ class Itinerary < ApplicationRecord
 
   def generate_token_on_save?
     !persisted? || (will_save_change_to_public? && !public?)
+  end
+
+  def popularity
+    itinerary_copies.count * 100
   end
 end

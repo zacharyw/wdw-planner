@@ -13,4 +13,5 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_many :favorites, dependent: :destroy
+  has_many :itinerary_copies, dependent: :destroy
 end
