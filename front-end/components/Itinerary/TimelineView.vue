@@ -11,6 +11,34 @@
         <span v-show="copying">Copying...</span>
       </b-button>
     </b-tooltip>
+    <div v-if="false">
+      <b-button
+        v-show="!isFavorite"
+        type="is-light"
+        style="margin-bottom: 2rem;"
+        :disabled="favoriting"
+        @click="saveFavorite"
+      >
+        <b-icon icon="heart"> </b-icon>
+        <span v-show="!favoriting">Save Favorite</span>
+        <span v-show="favoriting">Favoriting</span>
+      </b-button>
+      <b-button
+        v-show="isFavorite"
+        :type="hoveringFavorite ? 'is-danger' : 'is-success'"
+        style="margin-bottom: 2rem;"
+        :disabled="unFavoriting"
+        @click="unFavorite"
+        @mouseover="hoveringFavorite = true"
+        @mouseleave="hoveringFavorite = false"
+      >
+        <b-icon v-show="!hoveringFavorite" icon="heart"> </b-icon>
+        <b-icon v-show="hoveringFavorite" icon="heart-broken"> </b-icon>
+        <span v-show="!unFavoriting && !hoveringFavorite">Favorite!</span>
+        <span v-show="!unFavoriting && hoveringFavorite">Unfavorite</span>
+        <span v-show="unFavoriting">Unfavoriting</span>
+      </b-button>
+    </div>
     <b-loading
       :is-full-page="false"
       :active.sync="isLoading"
@@ -40,6 +68,10 @@ export default {
     shareToken: {
       type: String,
       default: ''
+    },
+    isFavorite: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -50,7 +82,10 @@ export default {
       dayPlans: [],
       copying: false,
       notes: '',
-      isLoading: true
+      isLoading: true,
+      favoriting: false,
+      unFavoriting: false,
+      hoveringFavorite: false
     };
   },
   mounted: async function() {
@@ -120,6 +155,8 @@ export default {
       : null;
   },
   methods: {
+    saveFavorite: function() {},
+    unFavorite: function() {},
     copyItinerary: function() {
       this.copying = true;
       const client = this.$apollo.getClient();

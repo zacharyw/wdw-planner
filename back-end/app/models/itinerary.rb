@@ -4,6 +4,7 @@ class Itinerary < ApplicationRecord
   belongs_to :user
 
   has_many :days, dependent: :destroy
+  has_many :favorites, dependent: :destroy
 
   validates :share_token, presence: true
   validates :share_token, uniqueness: true
