@@ -129,9 +129,11 @@ const fastPassOptions = {
     { name: 'UP! A Great Bird Adventure', tier: 2 }
   ],
   'Hollywood Studios': [
-    { name: 'Alien Swirling Saucers', tier: 1 },
+    { name: "Mickey and Minnie's Runaway Railway", tier: 1 },
+    { name: 'Millennium Falcon: Smugglers Run', tier: 1 },
     { name: 'Slinky Dog Dash', tier: 1 },
-    { name: 'Toy Story Mania!', tier: 1 },
+    { name: 'Alien Swirling Saucers', tier: 2 },
+    { name: 'Toy Story Mania!', tier: 2 },
     { name: 'Beauty and the Beast', tier: 2 },
     { name: 'Disney Junior Dance Party!', tier: 2 },
     { name: 'Fantasmic!', tier: 2 },
