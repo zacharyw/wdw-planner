@@ -94,7 +94,7 @@
               </div>
             </div>
           </feature-toggle>
-          <a class="navbar-item">
+          <a v-if="false" class="navbar-item">
             Contact
           </a>
         </div>

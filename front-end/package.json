@@ -11,7 +11,10 @@
     "dev": "HOST=0.0.0.0 nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "build:gh-pages": "DEPLOY_ENV=GH_PAGES HTTP_ENDPOINT=https://wdw-planner.herokuapp.com/graphql BROWSER_HTTP_ENDPOINT=https://wdw-planner.herokuapp.com/graphql BASE_URL=https://zacharyw.github.io/wdw-planner nuxt build",
+    "generate:gh-pages": "DEPLOY_ENV=GH_PAGES HTTP_ENDPOINT=https://wdw-planner.herokuapp.com/graphql BROWSER_HTTP_ENDPOINT=https://wdw-planner.herokuapp.com/graphql BASE_URL=https://zacharyw.github.io/wdw-planner nuxt generate",
+    "deploy": "git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "@nuxtjs/apollo": "^4.0.0-rc19",

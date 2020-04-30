@@ -1,5 +1,14 @@
 import gql from 'graphql-tag';
 
+const routerBase =
+  process.env.DEPLOY_ENV === 'GH_PAGES'
+    ? {
+        router: {
+          base: '/wdw-planner/'
+        }
+      }
+    : {};
+
 export default {
   mode: 'universal',
   /*
@@ -90,8 +99,9 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: 'http://rails:8080/graphql',
-        browserHttpEndpoint: 'http://localhost:8080/graphql'
+        httpEndpoint: process.env.HTTP_ENDPOINT || 'http://rails:8080/graphql',
+        browserHttpEndpoint:
+          process.env.BROWSER_HTTP_ENDPOINT || 'http://localhost:8080/graphql'
       }
     }
   },
@@ -127,5 +137,6 @@ export default {
   },
   env: {
     baseUrl: process.env.BASE_URL || 'http://localhost:3000'
-  }
+  },
+  ...routerBase
 };
