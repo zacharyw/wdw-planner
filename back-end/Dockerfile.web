@@ -1,0 +1,16 @@
+FROM ruby:2.5-alpine3.10
+
+RUN apk --update add build-base tzdata postgresql-dev postgresql-client libxslt-dev libxml2-dev imagemagick
+RUN mkdir /railsapp
+WORKDIR /railsapp
+COPY Gemfile /railsapp/Gemfile
+COPY Gemfile.lock /railsapp/Gemfile.lock
+
+RUN bundle install
+COPY . /railsapp
+
+# Run the image as a non-root user
+RUN adduser -D myuser
+USER myuser
+
+CMD bundle exec puma -C config/puma.rb
